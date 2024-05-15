@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using server.DTOs.Auth;
 using server.Model;
+using server.Services;
 
 namespace server.Controllers
 {
@@ -10,14 +13,22 @@ namespace server.Controllers
     public class AuthController : ControllerBase
     {
         public readonly UserManager<ApplicationUser> _userManager;
+        public readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ITokenService _tokenService;
 
-        public AuthController(UserManager<ApplicationUser> userManager)
+        public AuthController(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            ITokenService tokenService
+        )
         {
             _userManager = userManager;
+            _signInManager = signInManager;
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> PostAsync([FromBody] RegisterDTO registerDTO)
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO registerDTO)
         {
             try
             {
@@ -54,6 +65,44 @@ namespace server.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginAsync([FromBody] LoginDTO loginDTO)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new { message = "Invalid login request" });
+
+            if (string.IsNullOrEmpty(loginDTO.Password) || string.IsNullOrEmpty(loginDTO.Username))
+                return BadRequest(new { message = "One or more fields are empty" });
+
+            var user = await _userManager.Users.FirstOrDefaultAsync(u =>
+                u.UserName == loginDTO.Username.ToLower()
+            );
+
+            if (user == null)
+                return Unauthorized(new { message = "Invalid username or password" });
+
+            if (string.IsNullOrEmpty(loginDTO.Password))
+                return BadRequest(new { message = "Password is empty" });
+
+            var res = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            HttpContext.Response.Cookies.Append(
+                "token",
+                _tokenService.CreateToken(user, userRoles.ToList()),
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.None,
+                    Secure = true,
+                    IsEssential = true
+                }
+            );
+
+            return Ok("Logged in sucessfully");
         }
     }
 }

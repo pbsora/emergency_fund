@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using server.Data;
 using server.Model;
+using server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -139,6 +140,8 @@ builder
             }
         };
     });
+
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 

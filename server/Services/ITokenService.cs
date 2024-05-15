@@ -1,11 +1,12 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using server.Model;
 
 namespace server.Services
 {
     public interface ITokenService
     {
-        JwtSecurityToken GenerateAccessToken(IEnumerable<Claim> claims, IConfiguration _config);
+        string CreateToken(ApplicationUser user, List<string> roles);
 
         string GenerateRefreshToken();
 
