@@ -31,6 +31,7 @@ namespace server.Services
                 new Claim(JwtRegisteredClaimNames.Email, user.Email!),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.UserName!),
                 new Claim(JwtRegisteredClaimNames.NameId, user.Id!),
+                new Claim(ClaimTypes.Name, user.UserName!)
             };
 
             foreach (var role in roles)
@@ -71,7 +72,7 @@ namespace server.Services
         {
             var secretKey =
                 Environment.GetEnvironmentVariable("JWTSecret")
-                ?? _config["JWT:SecretKey"]
+                ?? _config["JWT:Key"]
                 ?? throw new InvalidOperationException("Invalid key");
 
             var tokenValidationParameters = new TokenValidationParameters

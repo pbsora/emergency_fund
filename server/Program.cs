@@ -136,12 +136,14 @@ builder
                 var accessToken = context.Request.Cookies["token"];
                 if (!string.IsNullOrEmpty(accessToken))
                     context.Token = accessToken;
+
                 return Task.CompletedTask;
             }
         };
     });
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var app = builder.Build();
 
