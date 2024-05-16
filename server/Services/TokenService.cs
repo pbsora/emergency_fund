@@ -68,7 +68,7 @@ namespace server.Services
             return refreshToken;
         }
 
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token, IConfiguration _config)
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             var secretKey =
                 Environment.GetEnvironmentVariable("JWTSecret")

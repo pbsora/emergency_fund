@@ -21,6 +21,23 @@ builder
             .Ignore;
     });
 
+var client = Environment.GetEnvironmentVariable("ClientUrl") ?? "http://localhost:3000";
+
+builder.Services.AddCors(options =>
+    options.AddPolicy(
+        name: "MyPolicy",
+        policy =>
+        {
+            policy
+                .WithOrigins(client)
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .WithExposedHeaders("X-pagination");
+        }
+    )
+);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -157,6 +174,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseCors("MyPolicy");
 
 app.UseAuthentication();
 

@@ -17,7 +17,6 @@ namespace server.Controllers
         public readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ITokenService _tokenService;
         private readonly AppDbContext _context;
-        private readonly IConfiguration _config;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
@@ -31,7 +30,6 @@ namespace server.Controllers
             _signInManager = signInManager;
             _tokenService = tokenService;
             _context = context;
-            _config = config;
         }
 
         [HttpPost("register")]
@@ -118,7 +116,7 @@ namespace server.Controllers
                 Request.Cookies["refresh-token"]
                 ?? throw new ArgumentNullException(nameof(refreshToken));
 
-            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken!, _config);
+            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken!);
 
             if (principal == null)
                 return BadRequest(new { message = "Invalid access/refresh token" });

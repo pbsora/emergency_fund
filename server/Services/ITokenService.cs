@@ -10,6 +10,6 @@ namespace server.Services
 
         string GenerateRefreshToken();
 
-        ClaimsPrincipal GetPrincipalFromExpiredToken(string token, IConfiguration _config);
+        ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
     }
 }
