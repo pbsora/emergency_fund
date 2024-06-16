@@ -33,7 +33,7 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials()
-                .WithExposedHeaders("X-pagination");
+                .WithExposedHeaders("token");
         }
     )
 );
@@ -91,7 +91,8 @@ if (builder.Environment.IsDevelopment())
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequiredLength = 1;
         })
-        .AddEntityFrameworkStores<AppDbContext>();
+        .AddEntityFrameworkStores<AppDbContext>()
+        .AddApiEndpoints();
 }
 
 if (builder.Environment.IsProduction())
@@ -151,6 +152,7 @@ builder
             OnMessageReceived = context =>
             {
                 var accessToken = context.Request.Cookies["token"];
+
                 if (!string.IsNullOrEmpty(accessToken))
                     context.Token = accessToken;
 
@@ -182,5 +184,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapIdentityApi<ApplicationUser>();
 
 app.Run();

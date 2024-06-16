@@ -151,6 +151,7 @@ namespace server.Controllers
         [HttpGet("isAuthenticated")]
         public ActionResult isAuthenticated()
         {
+            Request.Cookies.TryGetValue("token", out string? token);
             return Ok(User.Identity!.IsAuthenticated);
         }
 
