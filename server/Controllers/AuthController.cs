@@ -22,8 +22,7 @@ namespace server.Controllers
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ITokenService tokenService,
-            AppDbContext context,
-            IConfiguration config
+            AppDbContext context
         )
         {
             _userManager = userManager;

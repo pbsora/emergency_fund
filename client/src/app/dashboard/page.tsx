@@ -26,10 +26,10 @@ const Dashboard = () => {
   };
 
   return (
-    <div>
+    <div className=" bg-zinc-900 min-h-screen">
       <form
         onSubmit={addPerson}
-        className="mt-10 text-white"
+        className="border border-red-500 text-white"
       >
         <ul className="text-white">
           {Array.from(people.values()).map((n, i) => {
@@ -59,9 +59,6 @@ const Dashboard = () => {
         />
         <button>Add</button>
       </form>
-      <div>
-        <input type="text" name="" id="" />
-      </div>
     </div>
   );
 };

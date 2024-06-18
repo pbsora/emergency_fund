@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using server.Data;
 using server.Model;
+using server.Repositories.UserConfig;
 using server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -163,6 +164,10 @@ builder
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+builder.Services.AddAutoMapper(typeof(ConfigDTOMappingProfile));
+
+builder.Services.AddScoped<IConfigRepository, ConfigRepository>();
 
 var app = builder.Build();
 

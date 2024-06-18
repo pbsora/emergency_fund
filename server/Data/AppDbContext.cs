@@ -20,5 +20,7 @@ namespace server.Data
             builder.Entity<IdentityRole>().HasData(roles);
             base.OnModelCreating(builder);
         }
+
+        public DbSet<Config> Config { get; set; }
     }
 }
