@@ -2,7 +2,6 @@ import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(req: NextRequest) {
-  console.log(req.url.includes("register"));
   const data = await fetch(
     "http://localhost:5065/api/auth/isAuthenticated",
     {
@@ -18,7 +17,6 @@ export default async function middleware(req: NextRequest) {
     req.url.includes("login") ||
     req.url.includes("register")
   ) {
-    console.log("here");
     if (data) {
       return NextResponse.redirect(
         new URL("/dashboard", req.url)

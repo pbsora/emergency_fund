@@ -119,8 +119,6 @@ export const registerAction = async (
       password,
       confirmPassword,
     });
-
-    console.log(res);
   } catch (error) {
     return (
       ((error as AxiosError)?.response?.data as {

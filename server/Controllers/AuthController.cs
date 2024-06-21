@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -152,6 +154,19 @@ namespace server.Controllers
         {
             Request.Cookies.TryGetValue("token", out string? token);
             return Ok(User.Identity!.IsAuthenticated);
+        }
+
+        [HttpGet("info")]
+        public ActionResult<Object> GetUserInfo()
+        {
+            var userInfo = new
+            {
+                userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                username = User.FindFirst(ClaimTypes.GivenName)?.Value,
+                Email = User.FindFirst(ClaimTypes.Email)?.Value
+            };
+
+            return Ok(userInfo);
         }
 
         private void SaveToken(string name, string token)

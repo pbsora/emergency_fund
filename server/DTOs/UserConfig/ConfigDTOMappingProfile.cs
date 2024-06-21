@@ -13,6 +13,8 @@ namespace server.Repositories.UserConfig
         public ConfigDTOMappingProfile()
         {
             CreateMap<Config, CreateConfigDTO>().ReverseMap();
+            CreateMap<Config, GetConfigDTO>().ReverseMap();
+            CreateMap<Config, UpdateConfigDTO>().ReverseMap();
         }
     }
 }

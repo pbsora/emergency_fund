@@ -17,16 +17,23 @@ namespace server.Repositories.UserConfig
             _mapper = mapper;
         }
 
-        public Task<Config> GetConfig(string userId)
+        public async Task<GetConfigDTO> GetConfig(string userId)
         {
-            throw new NotImplementedException();
+            Config? config = await _context.Config.FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (config == null)
+                throw new Exception("Configuration not found!");
+
+            return _mapper.Map<GetConfigDTO>(config);
         }
 
         public async Task<Boolean> CreateConfig(CreateConfigDTO configDTO)
         {
-            Boolean configExits = await _context.Config.AnyAsync(c => c.UserId == configDTO.UserId);
+            Boolean configExists = await _context.Config.AnyAsync(c =>
+                c.UserId == configDTO.UserId
+            );
 
-            if (configExits)
+            if (configExists)
                 return false;
 
             Config config = _mapper.Map<Config>(configDTO);
@@ -36,9 +43,12 @@ namespace server.Repositories.UserConfig
             return true;
         }
 
-        public Task<Config> UpdateConfig(UpdateConfigDTO configDTO)
+        public async Task<Config> UpdateConfig(UpdateConfigDTO configDTO)
         {
-            throw new NotImplementedException();
+            Config config = _mapper.Map<Config>(configDTO);
+            _context.Entry(config).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return config;
         }
     }
 }
