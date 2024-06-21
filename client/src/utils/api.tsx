@@ -1,13 +1,13 @@
 import axios from "axios";
 import { cookies } from "next/headers";
 
-const API = axios.create({
-  baseURL: "http://localhost:5065/api",
-  withCredentials: true,
-  headers: {
-    Cookie: `token=${cookies().get("token")?.value}`,
-  },
-});
+// const API = axios.create({
+//   baseURL: "http://localhost:5065/api",
+//   withCredentials: true,
+//   headers: {
+//     Cookie: `token=${cookies().get("token")?.value}`,
+//   },
+// });
 
 // export const internalFetch = (
 //   url: string,
@@ -53,6 +53,6 @@ class FetchWrapper {
   }
 }
 
-export const internalFetch = new FetchWrapper();
+export const API = new FetchWrapper();
 
 export default API;

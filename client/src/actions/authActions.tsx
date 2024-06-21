@@ -1,5 +1,6 @@
 "use server";
 
+import { CustomAggregateError } from "@/lib/Types & Interfaces";
 import API from "@/utils/api";
 import { AxiosError } from "axios";
 import { cookies } from "next/headers";
@@ -21,6 +22,59 @@ const loginSchema = z.object({
     ),
 });
 
+// export const loginAction = async (
+//   _: unknown,
+//   formData: FormData
+// ) => {
+//   try {
+//     const { success, data, error } = loginSchema.safeParse(
+//       Object.fromEntries(formData.entries())
+//     );
+
+//     if (!success) {
+//       return { message: error.errors[0].message };
+//     }
+
+//     const { username, password } = data;
+
+//     const res = await API.post("auth/login", {
+//       username,
+//       password,
+//     });
+
+//     const serverCookies = res.headers["set-cookie"];
+//     const token = serverCookies![0]
+//       .split(";")[0]
+//       .split("=")[1];
+
+//     cookies().set({
+//       name: "token",
+//       value: token,
+//       httpOnly: true,
+//       path: "/",
+//       sameSite: "none",
+//       secure: true,
+//     });
+
+//     if (res.status === 200 && res.statusText === "OK") {
+//       redirect("/dashboard");
+//     } else {
+//       console.log("here");
+//       return { message: "Something went wrong" };
+//     }
+//   } catch (error) {
+//     //For some reason redirect cannot be used inside a try-catch block, so this is a fix
+//     if (error.message === "NEXT_REDIRECT") {
+//       redirect("/dashboard");
+//     }
+//     return (
+//       ((error as AxiosError)?.response?.data as {
+//         message: string;
+//       }) || { message: "Something went wrong" }
+//     );
+//   }
+// };
+
 export const loginAction = async (
   _: unknown,
   formData: FormData
@@ -41,10 +95,11 @@ export const loginAction = async (
       password,
     });
 
-    const serverCookies = res.headers["set-cookie"];
-    const token = serverCookies![0]
+    const serverCookies = res.headers.getSetCookie();
+    const token = serverCookies[0]
       .split(";")[0]
       .split("=")[1];
+    console.log(token);
 
     cookies().set({
       name: "token",
@@ -58,13 +113,25 @@ export const loginAction = async (
     if (res.status === 200 && res.statusText === "OK") {
       redirect("/dashboard");
     } else {
-      console.log("here");
       return { message: "Something went wrong" };
     }
   } catch (error) {
     //For some reason redirect cannot be used inside a try-catch block, so this is a fix
     if (error.message === "NEXT_REDIRECT") {
       redirect("/dashboard");
+    }
+
+    if (Object.values(error)[0] instanceof AggregateError) {
+      const errorMessage = Object.values(
+        error
+      )[0] as CustomAggregateError;
+
+      if (errorMessage.errors[0].code == "ECONNREFUSED") {
+        return {
+          message:
+            "Server is down. Please try again later!",
+        };
+      }
     }
     return (
       ((error as AxiosError)?.response?.data as {
@@ -119,13 +186,23 @@ export const registerAction = async (
       password,
       confirmPassword,
     });
+    if (res.status === 200 && res.statusText === "OK") {
+      redirect("/dashboard");
+    } else {
+      return { message: "Something went wrong" };
+    }
   } catch (error) {
-    return (
-      ((error as AxiosError)?.response?.data as {
-        message: string;
-      }) || {
-        message: "Something went wrong",
-      }
-    );
+    //For some reason redirect cannot be used inside a try-catch block, so this is a fix
+    if (error.message === "NEXT_REDIRECT") {
+      redirect("/dashboard");
+    }
+    console.log(error);
+    // return (
+    //   ((error as AxiosError)?.response?.data as {
+    //     message: string;
+    //   }) || {
+    //     message: "Something went wrong",
+    //   }
+    // );
   }
 };
