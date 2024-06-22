@@ -22,5 +22,6 @@ namespace server.Data
         }
 
         public DbSet<Config> Config { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
     }
 }

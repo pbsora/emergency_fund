@@ -11,6 +11,7 @@ namespace server.DTOs.UserConfig
         public Guid Id { get; set; }
         public double GoalAmount { get; set; }
         public double MonthlyIncome { get; set; }
+        public int Months { get; set; }
 
         [Required]
         public string? UserId { get; set; }

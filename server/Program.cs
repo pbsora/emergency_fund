@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using server.Data;
+using server.DTOs.Transactions;
 using server.Model;
+using server.Repositories.Transactions;
 using server.Repositories.UserConfig;
 using server.Services;
 
@@ -166,8 +168,10 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddAutoMapper(typeof(ConfigDTOMappingProfile));
+builder.Services.AddAutoMapper(typeof(TransactionDTOMappingProfile));
 
 builder.Services.AddScoped<IConfigRepository, ConfigRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 var app = builder.Build();
 
