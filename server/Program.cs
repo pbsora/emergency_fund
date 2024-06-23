@@ -1,4 +1,6 @@
 using System.Text;
+using CloudinaryDotNet;
+using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -173,6 +175,8 @@ builder.Services.AddAutoMapper(typeof(TransactionDTOMappingProfile));
 builder.Services.AddScoped<IConfigRepository, ConfigRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
+DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -191,6 +195,8 @@ app.UseCors("MyPolicy");
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseStaticFiles();
 
 app.MapControllers();
 app.MapIdentityApi<ApplicationUser>();

@@ -149,12 +149,12 @@ namespace server.Controllers
                     .Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
                     ?.Value;
 
-                var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-
                 if (userId == null)
                 {
                     return StatusCode(403, "Unauthorized");
                 }
+
+                var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
                 var transaction = await _repository.SingleTransactionAsync(
                     Guid.Parse(transactionId)
