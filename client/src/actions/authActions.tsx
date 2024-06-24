@@ -99,7 +99,6 @@ export const loginAction = async (
     const token = serverCookies[0]
       .split(";")[0]
       .split("=")[1];
-    console.log(token);
 
     cookies().set({
       name: "token",
@@ -109,14 +108,14 @@ export const loginAction = async (
       sameSite: "none",
       secure: true,
     });
-
+    console.log("asd");
     if (res.status === 200 && res.statusText === "OK") {
       redirect("/dashboard");
     } else {
       return { message: "Something went wrong" };
     }
   } catch (error) {
-    //For some reason redirect cannot be used inside a try-catch block, so this is a fix
+    //For some reason redirect cannot be used inside a try-catch block, so this is a workaround
     if (error.message === "NEXT_REDIRECT") {
       redirect("/dashboard");
     }
@@ -186,23 +185,37 @@ export const registerAction = async (
       password,
       confirmPassword,
     });
+
     if (res.status === 200 && res.statusText === "OK") {
       redirect("/dashboard");
     } else {
-      return { message: "Something went wrong" };
+      const message = await res.json();
+      return message;
     }
   } catch (error) {
     //For some reason redirect cannot be used inside a try-catch block, so this is a fix
     if (error.message === "NEXT_REDIRECT") {
-      redirect("/dashboard");
+      redirect("/login");
     }
-    console.log(error);
-    // return (
-    //   ((error as AxiosError)?.response?.data as {
-    //     message: string;
-    //   }) || {
-    //     message: "Something went wrong",
-    //   }
-    // );
+
+    if (Object.values(error)[0] instanceof AggregateError) {
+      const errorMessage = Object.values(
+        error
+      )[0] as CustomAggregateError;
+
+      if (errorMessage.errors[0].code == "ECONNREFUSED") {
+        return {
+          message:
+            "Server is down. Please try again later!",
+        };
+      }
+    }
+    return (
+      ((error as AxiosError)?.response?.data as {
+        message: string;
+      }) || {
+        message: "Something went wrong",
+      }
+    );
   }
 };

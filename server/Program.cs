@@ -1,5 +1,4 @@
 using System.Text;
-using CloudinaryDotNet;
 using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -199,6 +198,7 @@ app.UseAuthorization();
 app.UseStaticFiles();
 
 app.MapControllers();
+
 app.MapIdentityApi<ApplicationUser>();
 
 app.Run();
