@@ -1,6 +1,5 @@
 "use server";
 
-import { CustomAggregateError } from "@/lib/Types & Interfaces";
 import {
   AggregateErrorHelper,
   ResponseMessageHelper,
@@ -52,17 +51,14 @@ export const imageChangeAction = async (
     );
 
     if (!res.ok) {
-      return (await ResponseMessageHelper(res)).message;
+      return await ResponseMessageHelper(res);
     }
 
     revalidatePath("/dashboard/config");
     return { message: "Image uploaded successfully" };
   } catch (error) {
-    console.log(error);
     if (Object.values(error)[0] instanceof AggregateError) {
-      return {
-        message: AggregateErrorHelper(error)?.message,
-      };
+      return AggregateErrorHelper(error);
     }
     return { message: error.message };
   }

@@ -123,11 +123,9 @@ export const loginAction = async (
     }
 
     if (Object.values(error)[0] instanceof AggregateError) {
-      return {
-        message: AggregateErrorHelper(error)?.message,
-      };
+      return AggregateErrorHelper(error);
     }
-    console.log(error);
+
     return (
       ((error as AxiosError)?.response?.data as {
         message: string;
@@ -183,7 +181,7 @@ export const registerAction = async (
     });
 
     if (res.status === 200 && res.statusText === "OK") {
-      redirect("/dashboard");
+      redirect("/login");
     } else {
       const message = await res.json();
       return message;
@@ -195,9 +193,7 @@ export const registerAction = async (
     }
 
     if (Object.values(error)[0] instanceof AggregateError) {
-      return {
-        message: AggregateErrorHelper(error)?.message,
-      };
+      return AggregateErrorHelper(error);
     }
     return (
       ((error as AxiosError)?.response?.data as {

@@ -18,7 +18,7 @@ export const AggregateErrorHelper = (
 
 export const ResponseMessageHelper = async (
   res: Response
-) => {
+): Promise<{ message: string }> => {
   const contentType = res.headers.get("Content-Type");
   if (
     contentType &&
