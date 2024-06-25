@@ -1,0 +1,69 @@
+"use server";
+
+import { CustomAggregateError } from "@/lib/Types & Interfaces";
+import {
+  AggregateErrorHelper,
+  ResponseMessageHelper,
+} from "@/lib/helpers";
+import API from "@/utils/api";
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
+
+const MAX_FILE_SIZE = 5000000;
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
+
+const imageChangeSchema = z.object({
+  image: z
+    .any()
+    .refine(
+      (image) => image?.size <= MAX_FILE_SIZE,
+      "Max image size is 5MB"
+    )
+    .refine(
+      (image) => ACCEPTED_IMAGE_TYPES.includes(image?.type),
+      "Only .jpeg, .jpg, .png, .webp file formats are accepted"
+    ),
+});
+
+export const imageChangeAction = async (
+  _: unknown,
+  formData: FormData
+) => {
+  try {
+    const { error, data } = imageChangeSchema.safeParse(
+      Object.fromEntries(formData.entries())
+    );
+
+    if (error) {
+      return { message: error.errors[0].message };
+    }
+
+    const imageData = new FormData();
+    imageData.append("image", data.image);
+
+    const res = await API.patch(
+      "config/profile-picture",
+      formData
+    );
+
+    if (!res.ok) {
+      return (await ResponseMessageHelper(res)).message;
+    }
+
+    revalidatePath("/dashboard/config");
+    return { message: "Image uploaded successfully" };
+  } catch (error) {
+    console.log(error);
+    if (Object.values(error)[0] instanceof AggregateError) {
+      return {
+        message: AggregateErrorHelper(error)?.message,
+      };
+    }
+    return { message: error.message };
+  }
+};

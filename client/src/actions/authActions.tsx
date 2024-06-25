@@ -1,6 +1,7 @@
 "use server";
 
 import { CustomAggregateError } from "@/lib/Types & Interfaces";
+import { AggregateErrorHelper } from "@/lib/helpers";
 import API from "@/utils/api";
 import { AxiosError } from "axios";
 import { cookies } from "next/headers";
@@ -95,6 +96,11 @@ export const loginAction = async (
       password,
     });
 
+    if (!res.ok) {
+      const message = await res.json();
+      return message;
+    }
+
     const serverCookies = res.headers.getSetCookie();
     const token = serverCookies[0]
       .split(";")[0]
@@ -108,12 +114,8 @@ export const loginAction = async (
       sameSite: "none",
       secure: true,
     });
-    console.log("asd");
-    if (res.status === 200 && res.statusText === "OK") {
-      redirect("/dashboard");
-    } else {
-      return { message: "Something went wrong" };
-    }
+
+    redirect("/dashboard");
   } catch (error) {
     //For some reason redirect cannot be used inside a try-catch block, so this is a workaround
     if (error.message === "NEXT_REDIRECT") {
@@ -121,17 +123,11 @@ export const loginAction = async (
     }
 
     if (Object.values(error)[0] instanceof AggregateError) {
-      const errorMessage = Object.values(
-        error
-      )[0] as CustomAggregateError;
-
-      if (errorMessage.errors[0].code == "ECONNREFUSED") {
-        return {
-          message:
-            "Server is down. Please try again later!",
-        };
-      }
+      return {
+        message: AggregateErrorHelper(error)?.message,
+      };
     }
+    console.log(error);
     return (
       ((error as AxiosError)?.response?.data as {
         message: string;
@@ -199,16 +195,9 @@ export const registerAction = async (
     }
 
     if (Object.values(error)[0] instanceof AggregateError) {
-      const errorMessage = Object.values(
-        error
-      )[0] as CustomAggregateError;
-
-      if (errorMessage.errors[0].code == "ECONNREFUSED") {
-        return {
-          message:
-            "Server is down. Please try again later!",
-        };
-      }
+      return {
+        message: AggregateErrorHelper(error)?.message,
+      };
     }
     return (
       ((error as AxiosError)?.response?.data as {

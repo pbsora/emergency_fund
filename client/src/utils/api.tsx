@@ -51,6 +51,18 @@ class FetchWrapper {
       body: JSON.stringify(data),
     });
   }
+
+  patch(url: string, data: FormData) {
+    url = url.charAt(0) === "/" ? url.slice(1) : url;
+    return fetch(this.baseURL + url, {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        Cookie: `token=${cookies().get("token")?.value}`,
+      },
+      body: data,
+    });
+  }
 }
 
 export const API = new FetchWrapper();

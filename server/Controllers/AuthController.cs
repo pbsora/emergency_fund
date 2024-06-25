@@ -157,13 +157,23 @@ namespace server.Controllers
         }
 
         [HttpGet("info")]
-        public ActionResult<Object> GetUserInfo()
+        public async Task<ActionResult<Object>> GetUserInfo()
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var user = await _userManager.FindByIdAsync(userId!);
+
+            if (user == null)
+            {
+                return BadRequest("User not found");
+            }
+
             var userInfo = new
             {
-                userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                userId,
                 username = User.FindFirst(ClaimTypes.GivenName)?.Value,
-                Email = User.FindFirst(ClaimTypes.Email)?.Value
+                Email = User.FindFirst(ClaimTypes.Email)?.Value,
+                ProfilePicture = user.ProfilePicture
             };
 
             return Ok(userInfo);

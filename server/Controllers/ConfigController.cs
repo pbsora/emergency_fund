@@ -123,7 +123,10 @@ namespace server.Controllers
                 if (!allowedExtensions.Contains(fileExtension))
                 {
                     return BadRequest(
-                        "Invalid file format. Only PNG, JPG, and JPEG files are allowed."
+                        new
+                        {
+                            message = "Invalid file format. Only PNG, JPG, and JPEG files are allowed."
+                        }
                     );
                 }
 

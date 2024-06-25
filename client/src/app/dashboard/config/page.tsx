@@ -1,4 +1,10 @@
+import ImageChange from "@/components/config/ImageChange";
+
 const Config = () => {
-  return <div>Config</div>;
+  return (
+    <div>
+      <ImageChange />
+    </div>
+  );
 };
 export default Config;
