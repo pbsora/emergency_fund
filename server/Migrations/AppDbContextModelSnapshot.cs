@@ -50,13 +50,13 @@ namespace server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5cf4f99a-f6c4-450c-a15a-e121c8cd3790",
+                            Id = "291682fb-39d6-4616-84b2-dfac4b56a65b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "93352ccb-c56a-4d7c-8df3-cd1363c84a9d",
+                            Id = "bd973084-d648-47ed-a942-594a416139c5",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -214,9 +214,6 @@ namespace server.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("ProfilePicture")
-                        .HasColumnType("text");
-
                     b.Property<string>("RefreshToken")
                         .HasColumnType("text");
 
@@ -344,6 +341,31 @@ namespace server.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("server.Model.ApplicationUser", b =>
+                {
+                    b.OwnsOne("server.Model.ProfilePicture", "ProfilePicture", b1 =>
+                        {
+                            b1.Property<string>("ApplicationUserId")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("PublicId")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Url")
+                                .HasColumnType("text");
+
+                            b1.HasKey("ApplicationUserId");
+
+                            b1.ToTable("AspNetUsers");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ApplicationUserId");
+                        });
+
+                    b.Navigation("ProfilePicture")
                         .IsRequired();
                 });
 

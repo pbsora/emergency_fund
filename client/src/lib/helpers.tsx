@@ -25,7 +25,10 @@ export const ResponseMessageHelper = async (
     contentType.includes("application/json")
   ) {
     const message = await res.json();
-    return { message } || "Failed to upload image";
+    return (
+      { message: message.message } ||
+      "Failed to upload image"
+    );
   } else {
     const message = await res.text();
     return { message } || "Failed to upload image";

@@ -8,7 +8,7 @@ const ImageForm = () => {
     imageChangeAction,
     null
   );
-
+  console.log(error?.message);
   return (
     <form
       action={action}

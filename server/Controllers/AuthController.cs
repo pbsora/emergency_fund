@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -156,6 +157,7 @@ namespace server.Controllers
             return Ok(User.Identity!.IsAuthenticated);
         }
 
+        [Authorize]
         [HttpGet("info")]
         public async Task<ActionResult<Object>> GetUserInfo()
         {

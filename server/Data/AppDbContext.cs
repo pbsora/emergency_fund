@@ -18,6 +18,9 @@ namespace server.Data
                 new IdentityRole { Name = "User", NormalizedName = "USER" }
             };
             builder.Entity<IdentityRole>().HasData(roles);
+
+            builder.Entity<ApplicationUser>().OwnsOne(u => u.ProfilePicture);
+
             base.OnModelCreating(builder);
         }
 

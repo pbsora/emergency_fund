@@ -12,8 +12,8 @@ using server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240513215600_init")]
-    partial class Init
+    [Migration("20240626111522_AddProfilePictureObjectToUser")]
+    partial class AddProfilePictureObjectToUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,6 +49,20 @@ namespace server.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "291682fb-39d6-4616-84b2-dfac4b56a65b",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "bd973084-d648-47ed-a942-594a416139c5",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -182,6 +196,10 @@ namespace server.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -198,6 +216,12 @@ namespace server.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
@@ -219,6 +243,57 @@ namespace server.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("server.Model.Config", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("GoalAmount")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("MonthlyIncome")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("Months")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Config");
+                });
+
+            modelBuilder.Entity("server.Model.Transaction", b =>
+                {
+                    b.Property<Guid>("TransactionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("TransactionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -270,6 +345,51 @@ namespace server.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("server.Model.ApplicationUser", b =>
+                {
+                    b.OwnsOne("server.Model.ProfilePicture", "ProfilePicture", b1 =>
+                        {
+                            b1.Property<string>("ApplicationUserId")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("PublicId")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Url")
+                                .HasColumnType("text");
+
+                            b1.HasKey("ApplicationUserId");
+
+                            b1.ToTable("AspNetUsers");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ApplicationUserId");
+                        });
+
+                    b.Navigation("ProfilePicture")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("server.Model.Config", b =>
+                {
+                    b.HasOne("server.Model.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("server.Model.Transaction", b =>
+                {
+                    b.HasOne("server.Model.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

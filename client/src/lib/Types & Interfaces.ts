@@ -2,7 +2,10 @@ export type User = {
   userId: string;
   username: string;
   email: string;
-  profilePicture: string;
+  profilePicture: {
+    url: string;
+    publicId: string;
+  };
 };
 
 export interface UserState {

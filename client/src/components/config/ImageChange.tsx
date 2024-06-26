@@ -11,7 +11,7 @@ const ImageChange = async () => {
   return (
     <div className="flex ml-10 mt-10 gap-6">
       <img
-        src={userInfo.profilePicture}
+        src={userInfo.profilePicture.url}
         className="aspect-square w-24 rounded-full object-cover"
       />
       <ImageForm />

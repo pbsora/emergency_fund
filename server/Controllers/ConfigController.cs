@@ -86,16 +86,16 @@ namespace server.Controllers
 
                 if (oldConfig == null || id != oldConfig.UserId!.ToString())
                 {
-                    return BadRequest("Configuration error!");
+                    return BadRequest(new { message = "Configuration error!" });
                 }
 
                 await _repository.UpdateConfig(updateConfigDTO);
 
-                return Ok("Configuration updated with success!");
+                return Ok(new { message = "Configuration updated with success!" });
             }
             catch (Exception e)
             {
-                return BadRequest(e.Data);
+                return BadRequest(new { message = e.Data });
             }
         }
 
@@ -104,22 +104,24 @@ namespace server.Controllers
         {
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
                 if (image == null)
-                    return BadRequest("Image not valid!");
+                    return BadRequest(new { message = "Image not valid!" });
 
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (String.IsNullOrEmpty(userId))
-                    return BadRequest("Not logged in!");
+                    return BadRequest(new { message = "Not logged in!" });
 
                 var user = await _userManager.FindByIdAsync(userId);
-
                 if (user == null)
-                    return BadRequest("User not found!");
+                    return BadRequest(new { message = "User not found!" });
+
+                Cloudinary cloudinary = new Cloudinary(
+                    Environment.GetEnvironmentVariable("CLOUDINARY_URL")
+                );
+                cloudinary.Api.Secure = true;
 
                 string[] allowedExtensions = [".png", ".jpg", ".jpeg"];
                 string fileExtension = Path.GetExtension(image.FileName).ToLower();
-
                 if (!allowedExtensions.Contains(fileExtension))
                 {
                     return BadRequest(
@@ -129,11 +131,6 @@ namespace server.Controllers
                         }
                     );
                 }
-
-                Cloudinary cloudinary = new Cloudinary(
-                    Environment.GetEnvironmentVariable("CLOUDINARY_URL")
-                );
-                cloudinary.Api.Secure = true;
 
                 var uploadParams = new ImageUploadParams()
                 {
@@ -146,22 +143,66 @@ namespace server.Controllers
                 };
 
                 var uploadResult = await cloudinary.UploadAsync(uploadParams);
-
                 if (uploadResult.Error != null)
                     return BadRequest(uploadResult.Error.Message);
 
-                user.ProfilePicture = uploadResult.SecureUrl.AbsoluteUri;
+                // Delete previous profile picture if not default picture
+                if (user.ProfilePicture.PublicId != "Default")
+                {
+                    var deleteParams = new DeletionParams(user.ProfilePicture.PublicId)
+                    {
+                        ResourceType = ResourceType.Image
+                    };
+
+                    var deleteResult = await cloudinary.DestroyAsync(deleteParams);
+
+                    if (deleteResult.Error != null)
+                        return BadRequest(new { deleteResult.Error.Message });
+                }
+
+                user.ProfilePicture.Url = uploadResult.SecureUrl.AbsoluteUri;
+                user.ProfilePicture.PublicId = uploadResult.PublicId;
 
                 var res = await _userManager.UpdateAsync(user);
 
                 if (!res.Succeeded)
-                    return BadRequest("Error updating user profile picture!");
+                    return BadRequest(new { message = "Error updating user profile picture!" });
 
-                return Ok("Successfully changed profile picture!");
+                return Ok(new { message = "Successfully changed profile picture!" });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpPatch("{name}")]
+        public async Task<IActionResult> ChangeName(string name)
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (String.IsNullOrEmpty(userId))
+                    return BadRequest(new { message = "Not logged in!" });
+
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (user == null)
+                    return BadRequest(new { message = "User not found!" });
+
+                user.Name = name;
+
+                var res = await _userManager.UpdateAsync(user);
+
+                if (!res.Succeeded)
+                    return BadRequest(new { message = "Error updating user name!" });
+
+                return Ok(new { message = "Successfully changed user name!" });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { message = e.Message });
             }
         }
     }
