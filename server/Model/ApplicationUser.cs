@@ -11,6 +11,10 @@ namespace server.Model
     public class ApplicationUser : IdentityUser
     {
         [Required(ErrorMessage = "Please enter your name!")]
+        [
+            StringLength(30, ErrorMessage = "Name is too long!"),
+            MinLength(2, ErrorMessage = "Name is too short!")
+        ]
         public string? Name { get; set; }
         public ProfilePicture ProfilePicture { get; set; } =
             new ProfilePicture

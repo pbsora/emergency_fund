@@ -181,7 +181,7 @@ namespace server.Controllers
         {
             try
             {
-                if (String.IsNullOrEmpty(name))
+                if (String.IsNullOrEmpty(name) || name.Length < 2 || name.Length > 30)
                     return BadRequest(new { message = "Name not valid!" });
 
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
