@@ -63,3 +63,36 @@ export const imageChangeAction = async (
     return { message: error.message };
   }
 };
+
+const nameSchema = z.object({
+  name: z.string().min(3).max(255),
+});
+
+export const updateNameAction = async (
+  _: unknown,
+  formData: FormData
+) => {
+  try {
+    const { error, data } = nameSchema.safeParse(
+      Object.fromEntries(formData.entries())
+    );
+
+    if (error) {
+      return { message: error.errors[0].message };
+    }
+
+    const res = await API.patch(`config/name/${data.name}`);
+
+    if (!res.ok) {
+      return await ResponseMessageHelper(res);
+    }
+
+    revalidatePath("/dashboard/config");
+    return { message: "Name updated successfully" };
+  } catch (error) {
+    if (Object.values(error)[0] instanceof AggregateError) {
+      return AggregateErrorHelper(error);
+    }
+    return { message: error.message };
+  }
+};

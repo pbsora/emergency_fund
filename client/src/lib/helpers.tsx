@@ -34,3 +34,7 @@ export const ResponseMessageHelper = async (
     return { message } || "Failed to upload image";
   }
 };
+
+export const Capitalize = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};

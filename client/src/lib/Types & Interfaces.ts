@@ -1,11 +1,9 @@
 export type User = {
   userId: string;
+  name: string;
   username: string;
   email: string;
-  profilePicture: {
-    url: string;
-    publicId: string;
-  };
+  profilePicture: string;
 };
 
 export interface UserState {

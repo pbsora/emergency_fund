@@ -173,9 +173,10 @@ namespace server.Controllers
             var userInfo = new
             {
                 userId,
+                name = user.Name,
                 username = User.FindFirst(ClaimTypes.GivenName)?.Value,
                 Email = User.FindFirst(ClaimTypes.Email)?.Value,
-                ProfilePicture = user.ProfilePicture
+                ProfilePicture = user.ProfilePicture.Url
             };
 
             return Ok(userInfo);

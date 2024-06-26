@@ -6,8 +6,15 @@ import {
 } from "@reduxjs/toolkit";
 
 const initialState: UserState = {
-  value: { userId: "", username: "", email: "" },
+  value: {
+    userId: "",
+    name: "",
+    username: "",
+    email: "",
+    profilePicture: "",
+  },
 };
+
 const userSlice = createSlice({
   name: "user",
   initialState,

@@ -52,7 +52,7 @@ class FetchWrapper {
     });
   }
 
-  patch(url: string, data: FormData) {
+  patch(url: string, data?: FormData | unknown) {
     url = url.charAt(0) === "/" ? url.slice(1) : url;
     return fetch(this.baseURL + url, {
       method: "PATCH",
@@ -60,7 +60,10 @@ class FetchWrapper {
       headers: {
         Cookie: `token=${cookies().get("token")?.value}`,
       },
-      body: data,
+      body:
+        data instanceof FormData
+          ? data
+          : JSON.stringify(data),
     });
   }
 }

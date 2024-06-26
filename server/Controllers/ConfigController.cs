@@ -170,17 +170,20 @@ namespace server.Controllers
 
                 return Ok(new { message = "Successfully changed profile picture!" });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, new { message = ex.Message });
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
 
-        [HttpPatch("{name}")]
+        [HttpPatch("name/{name}")]
         public async Task<IActionResult> ChangeName(string name)
         {
             try
             {
+                if (String.IsNullOrEmpty(name))
+                    return BadRequest(new { message = "Name not valid!" });
+
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
                 if (String.IsNullOrEmpty(userId))
@@ -200,9 +203,9 @@ namespace server.Controllers
 
                 return Ok(new { message = "Successfully changed user name!" });
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, new { message = e.Message });
+                return StatusCode(500, new { message = "Something went wrong!" });
             }
         }
     }
