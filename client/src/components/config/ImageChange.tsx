@@ -9,10 +9,10 @@ const ImageChange = async () => {
   );
 
   return (
-    <div className="flex ml-10 mt-10 gap-6">
+    <div className="flex ml-10 mt-10 gap-6 w-2/4 items-center">
       <img
         src={userInfo.profilePicture}
-        className="aspect-square w-24 rounded-full object-cover"
+        className="aspect-square size-24 rounded-full object-cover"
       />
       <ImageForm />
     </div>

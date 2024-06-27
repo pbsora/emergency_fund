@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
-import Sidebar from "../../components/dashboard/Sidebar";
+
 import { API } from "@/utils/api";
+import Sidebar from "@/components/dashboard/Sidebar/SidebarDesktop";
 
 const RootLayout = async ({
   children,
@@ -12,10 +13,8 @@ const RootLayout = async ({
   );
 
   return (
-    <div className="flex">
-      <div>
-        <Sidebar user={res} />
-      </div>
+    <div className="flex max-w-screen min-h-screen">
+      <Sidebar user={res} />
       {children}
     </div>
   );
