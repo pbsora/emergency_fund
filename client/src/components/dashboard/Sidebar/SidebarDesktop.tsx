@@ -21,7 +21,7 @@ const Sidebar = ({ user }: { user: User }) => {
   }, [dispatch, user]);
 
   return (
-    <div className="h-screen min-w-[17%] hidden  bg-zinc-900 dark:bg-red-500 text-white md:flex flex-col">
+    <div className="h-screen min-w-[20%] hidden bg-zinc-900 dark:bg-yellow-500/90 text-white lg:flex flex-col">
       <div className="flex justify-center items-center gap-4 mt-10">
         <img
           src={"/costs_logo.png"}
@@ -51,14 +51,14 @@ const Sidebar = ({ user }: { user: User }) => {
           </SidebarLink>
         </div>
       </div>
-      {/* <div>
+      <div>
         <button onClick={() => setTheme("light")}>
           Light
         </button>
         <button onClick={() => setTheme("dark")}>
           Dark
         </button>
-      </div> */}
+      </div>
     </div>
   );
 };

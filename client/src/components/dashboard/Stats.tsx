@@ -2,7 +2,7 @@ import { FaArrowTrendUp } from "react-icons/fa6";
 
 const Stats = () => {
   return (
-    <div className="bg-slate-100 md:w-[35%] h-screen px-10">
+    <div className="bg-slate-100 dark:bg-slate-900 md:w-[35%] h-screen px-10">
       <h1 className="font-semibold text-2xl my-10">
         Overview
       </h1>

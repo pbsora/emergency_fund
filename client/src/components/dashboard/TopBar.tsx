@@ -11,7 +11,7 @@ const TopBar = () => {
   );
 
   return (
-    <div className="w-full py-2 px-3 md:p-8 flex flex-col-reverse md:flex-row items-center justify-between gap-4">
+    <div className="w-full py-2 px-3 md:p-8 flex-col-reverse md:flex-row items-center justify-between gap-4 hidden lg:flex">
       <div className="w-full lg:w-72 bg-slate-100 flex items-center justify-center py-1">
         <input
           type="text"

@@ -40,7 +40,7 @@ const SidebarMobile = () => {
         >
           <RxHamburgerMenu />
         </button>
-        <ul className=" items-center justify-center font-montserrat flex flex-col gap-6  md:hidden">
+        <ul className=" items-center justify-center font-montserrat flex flex-col gap-6">
           <li>
             <a
               href="#hero"

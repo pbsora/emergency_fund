@@ -53,9 +53,10 @@ export const imageChangeAction = async (
     if (!res.ok) {
       return await ResponseMessageHelper(res);
     }
-
     revalidatePath("/dashboard/config");
-    return { message: "Image uploaded successfully" };
+    return {
+      success: "Profile picture updated successfully!",
+    };
   } catch (error) {
     if (Object.values(error)[0] instanceof AggregateError) {
       return AggregateErrorHelper(error);
@@ -65,7 +66,10 @@ export const imageChangeAction = async (
 };
 
 const nameSchema = z.object({
-  name: z.string().min(3).max(30),
+  name: z
+    .string()
+    .min(3, "Name must be at least 3 characters long!")
+    .max(30, "Name must be at most 30 characters long!"),
 });
 
 export const updateNameAction = async (
@@ -88,7 +92,7 @@ export const updateNameAction = async (
     }
 
     revalidatePath("/dashboard/config");
-    return { message: "Name updated successfully" };
+    return { success: "Name updated successfully!" };
   } catch (error) {
     if (Object.values(error)[0] instanceof AggregateError) {
       return AggregateErrorHelper(error);

@@ -1,7 +1,8 @@
 "use client";
 
 import { imageChangeAction } from "@/actions/configActions";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
+import { Button } from "../ui/button";
 
 const ImageForm = () => {
   const [error, action] = useFormState(
@@ -12,9 +13,9 @@ const ImageForm = () => {
   return (
     <form
       action={action}
-      className="flex flex-col justify-center w-full"
+      className="flex flex-col justify-center w-full gap-2"
     >
-      <div className="flex items-center justify-center w-full ">
+      <div className="flex items-center justify-center w-full">
         <label
           htmlFor="dropzone-file"
           className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 "
@@ -53,8 +54,28 @@ const ImageForm = () => {
           />
         </label>
       </div>
-      <button>Submit</button>
+      {error && error.success ? (
+        <p className=" text-sm text-center">
+          {error.success}
+        </p>
+      ) : (
+        <p className="text-red-500 text-sm text-center">
+          {error?.message}
+        </p>
+      )}
+      <SubmitButton />
     </form>
   );
 };
+
+const SubmitButton = () => {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button disabled={pending}>
+      {pending ? "Uploading" : "Upload"}
+    </Button>
+  );
+};
+
 export default ImageForm;
