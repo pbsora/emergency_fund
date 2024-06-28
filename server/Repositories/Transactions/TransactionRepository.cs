@@ -27,7 +27,6 @@ namespace server.Repositories.Transactions
                     TransactionId = t.TransactionId,
                     Amount = t.Amount,
                     Date = t.Date,
-                    UserId = t.UserId
                 })
                 .ToListAsync();
 
@@ -96,6 +95,38 @@ namespace server.Repositories.Transactions
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<object> GetTransactionStatus(string userId)
+        {
+            int count = await _context.Transactions.CountAsync(t => t.UserId == userId);
+
+            if (count == 0)
+            {
+                throw new KeyNotFoundException("No transactions found");
+            }
+
+            double total = await _context
+                .Transactions.Where(t => t.UserId == userId)
+                .SumAsync(t => t.Amount);
+
+            GetTransactionDTO? last = await _context
+                .Transactions.Where(t => t.UserId == userId)
+                .OrderByDescending(t => t.Date)
+                .Select(t => new GetTransactionDTO
+                {
+                    TransactionId = t.TransactionId,
+                    Amount = t.Amount,
+                    Date = t.Date,
+                })
+                .FirstOrDefaultAsync();
+
+            return new
+            {
+                count,
+                total,
+                last
+            };
         }
     }
 }

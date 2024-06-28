@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using server.DTOs.Transactions;
 using server.Model;
@@ -12,10 +13,15 @@ namespace server.Controllers
     public class TransactionController : ControllerBase
     {
         private readonly ITransactionRepository _repository;
+        public readonly UserManager<ApplicationUser> _userManager;
 
-        public TransactionController(ITransactionRepository repository)
+        public TransactionController(
+            ITransactionRepository repository,
+            UserManager<ApplicationUser> userManager
+        )
         {
             _repository = repository;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -160,11 +166,6 @@ namespace server.Controllers
                     Guid.Parse(transactionId)
                 );
 
-                if (transaction.UserId != userId)
-                {
-                    return StatusCode(403, "Unauthorized");
-                }
-
                 var result = await _repository.DeleteTransactionAsync(transactionId);
 
                 if (!result)
@@ -182,6 +183,26 @@ namespace server.Controllers
                 }
 
                 return StatusCode(500, "Something went wrong");
+            }
+        }
+
+        [HttpGet("status")]
+        public async Task<ActionResult<object>> GetStatus()
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (userId == null)
+                    return StatusCode(403, "Unauthorized");
+
+                var transactions = await _repository.GetTransactionStatus(userId);
+
+                return Ok(transactions);
+            }
+            catch (Exception)
+            {
+                return NotFound(new { message = "No transactions found" });
             }
         }
 

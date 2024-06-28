@@ -192,7 +192,7 @@ namespace server.Controllers
                 var user = await _userManager.FindByIdAsync(userId);
 
                 if (user == null)
-                    return BadRequest(new { message = "User not found!" });
+                    return NotFound(new { message = "User not found!" });
 
                 user.Name = name;
 

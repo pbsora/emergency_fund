@@ -12,8 +12,5 @@ namespace server.DTOs.Transactions
 
         [MaxLength(100, ErrorMessage = "Description cannot be longer than 100 characters")]
         public string? Description { get; set; }
-
-        [Required]
-        public string? UserId { get; set; }
     }
 }
