@@ -19,3 +19,17 @@ export interface CustomAggregateError
   extends AggregateError {
   errors: CustomError[];
 }
+
+export type Transaction = {
+  transactionId: string;
+  amount: number;
+  date: Date;
+  description?: string;
+  userId?: string;
+};
+
+export type Status = {
+  total: number;
+  count: number;
+  last: Transaction;
+};

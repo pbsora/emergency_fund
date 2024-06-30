@@ -8,12 +8,12 @@ const ImageChange = async () => {
   );
 
   return (
-    <div className="flex flex-col sm:flex-row md:flex-row lg:ml-10 gap-6 w-full sm:w-3/4 md:w-3/4 lg:w-2/4 m-auto md:m-0">
+    <div className="flex flex-col sm:flex-row md:flex-row  gap-6 w-full sm:w-3/4 md:w-3/4 lg:w-2/4 m-auto md:m-0">
+      <ImageForm />
       <img
         src={userInfo.profilePicture}
         className="aspect-square size-24 rounded-full object-cover mt-3"
       />
-      <ImageForm />
     </div>
   );
 };

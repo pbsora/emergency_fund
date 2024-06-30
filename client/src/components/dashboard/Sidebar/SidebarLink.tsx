@@ -12,8 +12,6 @@ const SidebarLink = ({
   children: ReactNode;
 }) => {
   const pathname = usePathname();
-
-  console.log(pathname.slice(1));
   return (
     <Link
       href={href}
