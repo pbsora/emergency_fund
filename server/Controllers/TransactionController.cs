@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using server.DTOs.Transactions;
 using server.Model;
+using server.Pagination.QueryParams;
 using server.Repositories.Transactions;
 
 namespace server.Controllers
@@ -25,7 +26,9 @@ namespace server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTransactionsAsync()
+        public async Task<IActionResult> GetTransactionsAsync(
+            [FromQuery] TransactionParams transactionParams
+        )
         {
             try
             {
@@ -38,7 +41,10 @@ namespace server.Controllers
                     return StatusCode(403, "Unauthorized");
                 }
 
-                var transactions = await _repository.GetTransactionsAsync(userId);
+                var transactions = await _repository.GetTransactionsAsync(
+                    userId,
+                    transactionParams
+                );
 
                 if (transactions == null)
                 {
@@ -54,7 +60,7 @@ namespace server.Controllers
         }
 
         [HttpGet("{transactionId}", Name = "GetSingle"),]
-        public async Task<ActionResult<GetTransactionDTO>> GetSingle(string transactionId)
+        public async Task<IActionResult> GetSingle(string transactionId)
         {
             try
             {
@@ -78,12 +84,7 @@ namespace server.Controllers
             }
             catch (Exception e)
             {
-                if (isCustomException(e))
-                {
-                    return StatusCode(400, e.Message);
-                }
-
-                return StatusCode(500, "Something went wrong");
+                return isCustomException(e);
             }
         }
 
@@ -98,7 +99,7 @@ namespace server.Controllers
 
                 if (userId == null)
                 {
-                    return StatusCode(403, "Unauthorized");
+                    return StatusCode(403);
                 }
 
                 var transaction = await _repository.CreateTransactionAsync(transactionDTO, userId);
@@ -111,12 +112,7 @@ namespace server.Controllers
             }
             catch (Exception e)
             {
-                if (isCustomException(e))
-                {
-                    return StatusCode(400, e.Message);
-                }
-
-                return StatusCode(500, "Something went wrong");
+                return isCustomException(e);
             }
         }
 
@@ -137,12 +133,7 @@ namespace server.Controllers
             }
             catch (Exception e)
             {
-                if (isCustomException(e))
-                {
-                    return StatusCode(400, e.Message);
-                }
-
-                return StatusCode(500, "Something went wrong");
+                return isCustomException(e);
             }
         }
 
@@ -177,12 +168,7 @@ namespace server.Controllers
             }
             catch (Exception e)
             {
-                if (isCustomException(e))
-                {
-                    return StatusCode(400, e.Message);
-                }
-
-                return StatusCode(500, "Something went wrong");
+                return isCustomException(e);
             }
         }
 
@@ -206,11 +192,22 @@ namespace server.Controllers
             }
         }
 
-        private Boolean isCustomException(Exception e)
+        private IActionResult isCustomException(Exception e)
         {
-            return typeof(InvalidOperationException).IsInstanceOfType(e)
-                || typeof(KeyNotFoundException).IsInstanceOfType(e)
-                || typeof(ArgumentException).IsInstanceOfType(e);
+            if (
+                typeof(InvalidOperationException).IsInstanceOfType(e)
+                || typeof(ArgumentException).IsInstanceOfType(e)
+            )
+            {
+                return StatusCode(400, e.Message);
+            }
+
+            if (typeof(KeyNotFoundException).IsInstanceOfType(e))
+            {
+                return StatusCode(404, e.Message);
+            }
+
+            return StatusCode(500, e.Message);
         }
     }
 }

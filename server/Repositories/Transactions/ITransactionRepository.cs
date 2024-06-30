@@ -1,11 +1,15 @@
 using server.DTOs.Transactions;
 using server.Model;
+using server.Pagination.QueryParams;
 
 namespace server.Repositories.Transactions
 {
     public interface ITransactionRepository
     {
-        Task<IEnumerable<GetTransactionDTO>> GetTransactionsAsync(string userId);
+        Task<IEnumerable<GetTransactionDTO>> GetTransactionsAsync(
+            string userId,
+            TransactionParams transactionParams
+        );
         Task<GetTransactionDTO> SingleTransactionAsync(Guid transactionId);
         Task<Transaction> CreateTransactionAsync(NewTransactionDTO transaction, string userId);
         Task<Boolean> UpdateTransaction(NewTransactionDTO transaction);

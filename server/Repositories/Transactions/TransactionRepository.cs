@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.DTOs.Transactions;
 using server.Model;
+using server.Pagination.QueryParams;
+using X.PagedList;
 
 namespace server.Repositories.Transactions
 {
@@ -17,9 +19,12 @@ namespace server.Repositories.Transactions
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GetTransactionDTO>> GetTransactionsAsync(string userId)
+        public async Task<IEnumerable<GetTransactionDTO>> GetTransactionsAsync(
+            string userId,
+            TransactionParams transactionParams
+        )
         {
-            var transactions = await _context
+            var transactions = _context
                 .Transactions.Where(t => t.UserId == userId)
                 .OrderByDescending(f => f.Date)
                 .Select(t => new GetTransactionDTO
@@ -28,14 +33,36 @@ namespace server.Repositories.Transactions
                     Amount = t.Amount,
                     Date = t.Date,
                 })
-                .ToListAsync();
+                .AsQueryable();
 
-            if (transactions.Count == 0)
+            //Criteria and amount filters
+            if (!string.IsNullOrEmpty(transactionParams.Criteria) && transactionParams.Amount > 0)
+            {
+                if (transactionParams.Criteria == "gt")
+                    transactions = transactions.Where(t => t.Amount > transactionParams.Amount);
+                else if (transactionParams.Criteria == "lt")
+                    transactions = transactions.Where(t => t.Amount < transactionParams.Amount);
+            }
+
+            //Month filter
+            if (transactionParams.Month > 0 && transactionParams.Year > 0)
+            {
+                transactions = transactions.Where(f =>
+                    f.Date.Month == transactionParams.Month && f.Date.Year == transactionParams.Year
+                );
+            }
+
+            var filteredTransactions = await transactions.ToPagedListAsync(
+                transactionParams.PageNumber,
+                transactionParams.PageSize
+            );
+
+            if (filteredTransactions.Count == 0)
             {
                 throw new KeyNotFoundException("No transactions found");
             }
 
-            return transactions;
+            return filteredTransactions;
         }
 
         public async Task<GetTransactionDTO> SingleTransactionAsync(Guid transactionId)
@@ -62,7 +89,12 @@ namespace server.Repositories.Transactions
             string userId
         )
         {
-            var transaction = new Transaction { Amount = transactionDTO.Amount, UserId = userId };
+            var transaction = new Transaction
+            {
+                Amount = transactionDTO.Amount,
+                UserId = userId,
+                Description = transactionDTO.Description
+            };
 
             await _context.Transactions.AddAsync(transaction);
             await _context.SaveChangesAsync();
