@@ -1,5 +1,6 @@
 import { Status } from "@/lib/Types & Interfaces";
 import API from "@/utils/api";
+import { formatCurrency } from "@/utils/formatters";
 
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { DateTime } from "ts-luxon";
@@ -38,7 +39,7 @@ const Stats = async () => {
           </h2>
           <div className="flex items-end justify-between">
             <span className="text-2xl font-semibold">
-              ${stats.total}
+              {formatCurrency(stats.total)}
             </span>
             <div className="bg-green-200 rounded-sm text-green-600 text-sm py-1 px-2 flex items-center gap-2">
               <FaArrowTrendUp />
