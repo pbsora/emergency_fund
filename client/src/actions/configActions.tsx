@@ -53,7 +53,7 @@ export const imageChangeAction = async (
     if (!res.ok) {
       return await ResponseMessageHelper(res);
     }
-    revalidatePath("/dashboard/config");
+    revalidatePath("/config");
     return {
       success: "Profile picture updated successfully!",
     };
@@ -93,6 +93,30 @@ export const updateNameAction = async (
 
     revalidatePath("/dashboard/config");
     return { success: "Name updated successfully!" };
+  } catch (error) {
+    if (Object.values(error)[0] instanceof AggregateError) {
+      return AggregateErrorHelper(error);
+    }
+    return { message: error.message };
+  }
+};
+
+export const monthsAction = async (
+  _: unknown,
+  months: number
+) => {
+  try {
+    if (![3, 6, 12].includes(months)) {
+      return { message: "Invalid option" };
+    }
+
+    const res = await API.patch(`config/months/${months}`);
+
+    if (!res.ok) {
+      return await ResponseMessageHelper(res);
+    }
+
+    return { success: "Updated successfully" };
   } catch (error) {
     if (Object.values(error)[0] instanceof AggregateError) {
       return AggregateErrorHelper(error);

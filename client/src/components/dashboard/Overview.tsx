@@ -8,8 +8,8 @@ import { DateTime } from "ts-luxon";
 const wait = async (ms: number) =>
   new Promise((res) => setTimeout(res, ms));
 
-const Stats = async () => {
-  await wait(5000);
+const Overview = async () => {
+  await wait(1000);
   let stats: Status = await API.get(
     "transactions/status"
   ).then((res) => res.json());
@@ -28,12 +28,12 @@ const Stats = async () => {
   }
 
   return (
-    <div className="bg-gradient-to-b from-slate-100 to-white from-80% lg:from-100%  lg:bg-slate-100  dark:bg-slate-900 md:w-[35%] h-screen container">
+    <div className="bg-gradient-to-b from-zinc-50 dark:from-[#1F1F1F] to-white from-80% lg:from-100% dark:bg-slate-900 md:w-[35%] h-screen container">
       <h1 className="font-semibold text-2xl my-10">
         Overview
       </h1>
-      <div className="flex flex-col gap-8">
-        <div className="flex flex-col pb-4 border-b">
+      <div className="flex flex-col gap-8 ">
+        <div className="flex flex-col pb-4 border-b dark:border-zinc-400">
           <h2 className="text-sm font-light text-zinc-500">
             Total Savings
           </h2>
@@ -47,7 +47,7 @@ const Stats = async () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col pb-4 border-b">
+        <div className="flex flex-col pb-4 border-b dark:border-zinc-400">
           <h2 className="text-sm font-light text-zinc-500">
             Count
           </h2>
@@ -86,9 +86,9 @@ const Stats = async () => {
   );
 };
 
-export function StatsSkeleton() {
+export function OverviewSkeleton() {
   return (
-    <div className="bg-gradient-to-b from-slate-100 to-white from-80% lg:from-100%  lg:bg-slate-100  dark:bg-slate-900 md:w-[35%] h-screen container">
+    <div className="bg-gradient-to-b from-zinc-50 dark:from-[#1F1F1F] to-white from-80% lg:from-100% dark:bg-slate-900 md:w-[35%] h-screen container">
       <h1 className="font-semibold text-2xl my-10">
         Overview
       </h1>
@@ -134,4 +134,4 @@ export function StatsSkeleton() {
   );
 }
 
-export default Stats;
+export default Overview;

@@ -1,4 +1,5 @@
 "use client";
+
 import { useAppSelector } from "@/hooks/ReduxHooks";
 import { Transaction } from "@/lib/Types & Interfaces";
 import {
@@ -8,25 +9,37 @@ import {
 } from "../ui/avatar";
 import { DateTime } from "ts-luxon";
 import { formatCurrency } from "@/utils/formatters";
+import { Capitalize } from "@/lib/helpers";
+import { useEffect, useState } from "react";
 
 const SingleTransaction = ({
   transaction,
 }: {
   transaction: Transaction;
 }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
   const user = useAppSelector((state) => state.user.value);
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return <SingleTransactionSkeleton />;
+  }
+
   return (
-    <div className="h-1/3 flex items-center  w-full">
+    <div className="h-1/3 flex items-center w-full">
       <div className="flex items-center gap-5 w-1/3">
         <Avatar className="size-8">
           <AvatarImage
             src={user.profilePicture}
             alt={user.name}
           />
-          <AvatarFallback>{user.name[0]}</AvatarFallback>
+          <AvatarFallback>U</AvatarFallback>
         </Avatar>
-        <span className="text-sm">{user.name}</span>
+        <h3 className="text-sm">{Capitalize(user.name)}</h3>
       </div>
       <div className="w-1/3 text-center text-sm">
         {DateTime.fromJSDate(
@@ -41,6 +54,7 @@ const SingleTransaction = ({
     </div>
   );
 };
+
 export default SingleTransaction;
 
 export const SingleTransactionSkeleton = () => {

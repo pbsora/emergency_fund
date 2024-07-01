@@ -8,7 +8,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
 const NameForm = () => {
-  const [error, action] = useFormState(
+  const [result, action] = useFormState(
     updateNameAction,
     null
   );
@@ -28,13 +28,13 @@ const NameForm = () => {
           placeholder="Name"
           defaultValue={Capitalize(name)}
         />
-        {error && error.success ? (
+        {result && result.success ? (
           <p className=" text-sm text-center">
-            {error.success}
+            {result.success}
           </p>
         ) : (
           <p className="text-red-500 text-sm text-center">
-            {error?.message}
+            {result?.message}
           </p>
         )}
 

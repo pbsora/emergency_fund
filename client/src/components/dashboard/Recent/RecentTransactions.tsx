@@ -10,12 +10,13 @@ import {
 } from "@/components/ui/select";
 import { Transaction } from "@/lib/Types & Interfaces";
 import API from "@/utils/api";
+import { Fragment } from "react";
 
 const wait = async (ms: number) =>
   new Promise((res) => setTimeout(res, ms));
 
 const RecentTransactions = async () => {
-  await wait(5000);
+  await wait(1000);
 
   const recentTransactions = await API.get(
     "transactions?pagesize=3"
@@ -47,21 +48,19 @@ const RecentTransactions = async () => {
           Amount
         </span>
       </div>
-      <div className="flex flex-col mt-2 h-full gap-1 ">
-        {recentTransactions.map(
-          (transaction: Transaction, i: number) => (
-            <>
-              <SingleTransaction
-                transaction={transaction}
-                key={transaction.transactionId}
-              />
-              <hr
-                className={`${
-                  i === 2 && "hidden"
-                } border-b border-b-zinc-300`}
-              />
-            </>
+      <div className="flex flex-col mt-2 h-full gap-1 divide-y-2 divide-zinc-200/80">
+        {recentTransactions ? (
+          recentTransactions.map(
+            (transaction: Transaction, i: number) => (
+              <Fragment key={transaction.transactionId}>
+                <SingleTransaction
+                  transaction={transaction}
+                />
+              </Fragment>
+            )
           )
+        ) : (
+          <div>No transactions yet</div>
         )}
       </div>
     </div>
@@ -96,16 +95,11 @@ export const RecentTransactionsSkeleton = () => {
           Amount
         </span>
       </div>
-      <div className="flex flex-col mt-2 h-full gap-1 ">
+      <div className="flex flex-col mt-2 h-full gap-1 divide-y-2 divide-zinc-200/80">
         {new Array(3).fill("").map((_, i: number) => (
-          <>
+          <Fragment key={i}>
             <SingleTransactionSkeleton />
-            <hr
-              className={`${
-                i === 2 && "hidden"
-              } border-b border-b-zinc-300`}
-            />
-          </>
+          </Fragment>
         ))}
       </div>
     </div>

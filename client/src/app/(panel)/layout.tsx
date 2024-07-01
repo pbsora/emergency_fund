@@ -14,7 +14,7 @@ const RootLayout = async ({
   );
 
   return (
-    <div className="flex flex-col lg:flex-row max-w-screen min-h-screen">
+    <div className="flex flex-col lg:flex-row max-w-screen min-h-screen dark:bg-zinc-950/50">
       <Navbar />
       <Sidebar user={res} />
       {children}

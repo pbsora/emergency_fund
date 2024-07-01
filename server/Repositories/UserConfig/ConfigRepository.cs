@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using server.Data;
 using server.DTOs.UserConfig;
 using server.Model;
@@ -49,6 +50,17 @@ namespace server.Repositories.UserConfig
             _context.Entry(config).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return config;
+        }
+
+        public async Task<bool> UpdateMonths(int months, string userId)
+        {
+            var config = await _context.Config.FirstOrDefaultAsync(c => c.UserId == userId);
+            if (config == null)
+                throw new KeyNotFoundException("Configuration not found!");
+
+            config.Months = months;
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -194,7 +194,7 @@ namespace server.Controllers
                 if (user == null)
                     return NotFound(new { message = "User not found!" });
 
-                user.Name = name;
+                user.Name = name.ToLower();
 
                 var res = await _userManager.UpdateAsync(user);
 
@@ -207,6 +207,47 @@ namespace server.Controllers
             {
                 return StatusCode(500, new { message = "Something went wrong!" });
             }
+        }
+
+        [HttpPatch("months/{months}")]
+        public async Task<IActionResult> ChangeMonthsAsync(int months)
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (String.IsNullOrEmpty(userId))
+                    return BadRequest(new { message = "Not logged in!" });
+
+                var res = await _repository.UpdateMonths(months, userId);
+
+                if (res == false)
+                    return BadRequest(new { message = "Error updating months!" });
+
+                return Ok(new { message = "Successfully changed months!" });
+            }
+            catch (Exception e)
+            {
+                return isCustomException(e);
+            }
+        }
+
+        private IActionResult isCustomException(Exception e)
+        {
+            if (
+                typeof(InvalidOperationException).IsInstanceOfType(e)
+                || typeof(ArgumentException).IsInstanceOfType(e)
+            )
+            {
+                return StatusCode(400, e.Message);
+            }
+
+            if (typeof(KeyNotFoundException).IsInstanceOfType(e))
+            {
+                return StatusCode(404, e.Message);
+            }
+
+            return StatusCode(500, e.Message);
         }
     }
 }
