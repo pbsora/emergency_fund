@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Identity;
@@ -74,17 +75,19 @@ namespace server.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(
-            string id,
-            [FromBody] UpdateConfigDTO updateConfigDTO
-        )
+        [HttpPut]
+        public async Task<IActionResult> PutAsync([FromBody] UpdateConfigDTO updateConfigDTO)
         {
             try
             {
-                GetConfigDTO oldConfig = await _repository.GetConfig(id);
+                string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                if (oldConfig == null || id != oldConfig.UserId!.ToString())
+                if (string.IsNullOrEmpty(userId))
+                    return BadRequest(new { message = "Not logged in!" });
+
+                GetConfigDTO oldConfig = await _repository.GetConfig(userId);
+
+                if (oldConfig == null || userId != oldConfig.UserId!.ToString())
                 {
                     return BadRequest(new { message = "Configuration error!" });
                 }
@@ -95,7 +98,7 @@ namespace server.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(new { message = e.Data });
+                return isCustomException(e);
             }
         }
 
@@ -236,7 +239,7 @@ namespace server.Controllers
         {
             if (
                 typeof(InvalidOperationException).IsInstanceOfType(e)
-                || typeof(ArgumentException).IsInstanceOfType(e)
+                || typeof(ArgumentNullException).IsInstanceOfType(e)
             )
             {
                 return StatusCode(400, e.Message);

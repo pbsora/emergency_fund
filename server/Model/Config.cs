@@ -12,7 +12,7 @@ namespace server.Model
         [Required(ErrorMessage = "Please enter your monthly income!"), Range(1, double.MaxValue)]
         public double MonthlyIncome { get; set; }
 
-        [Required(ErrorMessage = "How many months do you plan on saving?!"), Range(1, 24)]
+        [Required(ErrorMessage = "How many months do you plan on saving?!"), Range(1, 12)]
         public int Months { get; set; }
 
         [Required]

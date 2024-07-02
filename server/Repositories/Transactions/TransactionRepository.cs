@@ -32,6 +32,8 @@ namespace server.Repositories.Transactions
                     TransactionId = t.TransactionId,
                     Amount = t.Amount,
                     Date = t.Date,
+                    Description = t.Description,
+                    UserId = t.UserId
                 })
                 .AsQueryable();
 
@@ -102,14 +104,14 @@ namespace server.Repositories.Transactions
             return transaction;
         }
 
-        public async Task<Boolean> UpdateTransaction(NewTransactionDTO transactionDTO)
+        public async Task<GetTransactionDTO> UpdateTransaction(GetTransactionDTO transactionDTO)
         {
             Transaction transaction = _mapper.Map<Transaction>(transactionDTO);
 
             _context.Entry(transaction).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return true;
+            return _mapper.Map<GetTransactionDTO>(transaction);
         }
 
         public async Task<Boolean> DeleteTransactionAsync(string transactionId)
@@ -153,11 +155,17 @@ namespace server.Repositories.Transactions
                 })
                 .FirstOrDefaultAsync();
 
+            int months = await _context
+                .Config.Where(c => c.UserId == userId)
+                .Select(c => c.Months)
+                .FirstOrDefaultAsync();
+
             return new
             {
                 count,
                 total,
-                last
+                last,
+                months
             };
         }
     }

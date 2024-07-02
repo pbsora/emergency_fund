@@ -118,18 +118,23 @@ namespace server.Controllers
 
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> PutAsync([FromBody] NewTransactionDTO transactionDTO)
+        public async Task<IActionResult> PutAsync([FromBody] GetTransactionDTO transactionDTO)
         {
             try
             {
+                string? userId = User.FindFirst(ClaimTypes.Name)?.Value;
+
+                if (string.IsNullOrEmpty(userId))
+                    return Unauthorized(new { message = "Not logged in" });
+
                 var result = await _repository.UpdateTransaction(transactionDTO);
 
-                if (!result)
+                if (result == null)
                 {
                     return StatusCode(404, "Transaction not found");
                 }
 
-                return Ok();
+                return Ok(result);
             }
             catch (Exception e)
             {

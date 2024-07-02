@@ -12,7 +12,7 @@ namespace server.Repositories.Transactions
         );
         Task<GetTransactionDTO> SingleTransactionAsync(Guid transactionId);
         Task<Transaction> CreateTransactionAsync(NewTransactionDTO transaction, string userId);
-        Task<Boolean> UpdateTransaction(NewTransactionDTO transaction);
+        Task<GetTransactionDTO> UpdateTransaction(GetTransactionDTO transaction);
         Task<Boolean> DeleteTransactionAsync(string transactionId);
         Task<object> GetTransactionStatus(string userId);
     }

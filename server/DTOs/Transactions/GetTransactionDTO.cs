@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace server.DTOs.Transactions
 {
@@ -12,5 +13,7 @@ namespace server.DTOs.Transactions
 
         [MaxLength(100, ErrorMessage = "Description cannot be longer than 100 characters")]
         public string? Description { get; set; }
+
+        public string? UserId { get; set; }
     }
 }

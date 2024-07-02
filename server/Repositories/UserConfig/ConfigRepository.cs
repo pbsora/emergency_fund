@@ -23,7 +23,7 @@ namespace server.Repositories.UserConfig
             Config? config = await _context.Config.FirstOrDefaultAsync(c => c.UserId == userId);
 
             if (config == null)
-                throw new Exception("Configuration not found!");
+                throw new ArgumentNullException("Configuration not found!");
 
             return _mapper.Map<GetConfigDTO>(config);
         }
@@ -44,10 +44,10 @@ namespace server.Repositories.UserConfig
             return true;
         }
 
-        public async Task<Config> UpdateConfig(UpdateConfigDTO configDTO)
+        public async Task<UpdateConfigDTO> UpdateConfig(UpdateConfigDTO config)
         {
-            Config config = _mapper.Map<Config>(configDTO);
-            _context.Entry(config).State = EntityState.Modified;
+            var configToUpdate = _mapper.Map<Config>(config);
+            _context.Entry(configToUpdate).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return config;
         }
