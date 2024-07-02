@@ -40,23 +40,23 @@ namespace server.Controllers
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
                 if (String.IsNullOrEmpty(userId))
-                    return BadRequest("Not logged in");
+                    return BadRequest(new { message = "Not logged in!" });
 
                 GetConfigDTO config = await _repository.GetConfig(userId);
 
                 if (config == null)
-                    return NotFound("Configuration not found!");
+                    return NotFound(new { message = "User configuration not found!" });
 
                 return Ok(config);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(500, "Something went wrong!");
+                return HandleException(e);
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] CreateConfigDTO configDTO)
+        public async Task<ActionResult<object>> PostAsync([FromBody] CreateConfigDTO configDTO)
         {
             try
             {
@@ -64,19 +64,22 @@ namespace server.Controllers
 
                 if (config == false)
                     return BadRequest(
-                        "User configuration already exists, please update it instead!"
+                        new
+                        {
+                            message = "User configuration already exists, please update it instead!"
+                        }
                     );
 
-                return Ok("User configuration created successfully!");
+                return Ok(new { message = "User configuration created successfully!" });
             }
             catch (Exception e)
             {
-                return BadRequest(e.Data);
+                return HandleException(e);
             }
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutAsync([FromBody] ConfigDTO updateConfigDTO)
+        public async Task<ActionResult<object>> PutAsync([FromBody] ConfigDTO updateConfigDTO)
         {
             try
             {
@@ -98,12 +101,12 @@ namespace server.Controllers
             }
             catch (Exception e)
             {
-                return isCustomException(e);
+                return HandleException(e);
             }
         }
 
         [HttpPatch("profile-picture")]
-        public async Task<IActionResult> UploadImage(IFormFile image)
+        public async Task<ActionResult<object>> UploadImage(IFormFile image)
         {
             try
             {
@@ -173,9 +176,9 @@ namespace server.Controllers
 
                 return Ok(new { message = "Successfully changed profile picture!" });
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(500, new { message = "Internal server error" });
+                return HandleException(e);
             }
         }
 
@@ -213,7 +216,7 @@ namespace server.Controllers
         }
 
         [HttpPatch("months/{months}")]
-        public async Task<IActionResult> ChangeMonthsAsync(int months)
+        public async Task<ActionResult<object>> ChangeMonthsAsync(int months)
         {
             try
             {
@@ -231,26 +234,23 @@ namespace server.Controllers
             }
             catch (Exception e)
             {
-                return isCustomException(e);
+                return HandleException(e);
             }
         }
 
-        private IActionResult isCustomException(Exception e)
+        private ActionResult HandleException(Exception e)
         {
-            if (
-                typeof(InvalidOperationException).IsInstanceOfType(e)
-                || typeof(ArgumentNullException).IsInstanceOfType(e)
-            )
+            if (e is InvalidOperationException || e is ArgumentNullException)
             {
-                return StatusCode(400, e.Message);
+                return StatusCode(400, new { message = e.Message });
             }
 
-            if (typeof(KeyNotFoundException).IsInstanceOfType(e))
+            if (e is KeyNotFoundException)
             {
-                return StatusCode(404, e.Message);
+                return StatusCode(404, new { message = e.Message });
             }
 
-            return StatusCode(500, e.Message);
+            return StatusCode(500, new { message = "Something went wrong!" });
         }
     }
 }

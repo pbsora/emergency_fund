@@ -46,7 +46,7 @@ namespace server.Controllers
 
                 if (registerDTO.Password != registerDTO.ConfirmPassword)
                 {
-                    return BadRequest("Passwords do not match");
+                    return BadRequest(new { message = "Passwords do not match" });
                 }
 
                 ApplicationUser user = new ApplicationUser
@@ -106,7 +106,7 @@ namespace server.Controllers
             SaveToken("token", token);
             SaveToken("refresh-token", refreshToken);
 
-            return Ok("Logged in sucessfully");
+            return Ok(new { message = "Login successful" });
         }
 
         [HttpPost("refresh")]
@@ -167,7 +167,7 @@ namespace server.Controllers
 
             if (user == null)
             {
-                return BadRequest("User not found");
+                return BadRequest(new { message = "User not found" });
             }
 
             var userInfo = new

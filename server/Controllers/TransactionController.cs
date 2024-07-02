@@ -84,7 +84,7 @@ namespace server.Controllers
             }
             catch (Exception e)
             {
-                return isCustomException(e);
+                return HandleException(e);
             }
         }
 
@@ -112,7 +112,7 @@ namespace server.Controllers
             }
             catch (Exception e)
             {
-                return isCustomException(e);
+                return HandleException(e);
             }
         }
 
@@ -138,7 +138,7 @@ namespace server.Controllers
             }
             catch (Exception e)
             {
-                return isCustomException(e);
+                return HandleException(e);
             }
         }
 
@@ -173,7 +173,7 @@ namespace server.Controllers
             }
             catch (Exception e)
             {
-                return isCustomException(e);
+                return HandleException(e);
             }
         }
 
@@ -193,26 +193,23 @@ namespace server.Controllers
             }
             catch (Exception e)
             {
-                return isCustomException(e);
+                return HandleException(e);
             }
         }
 
-        private IActionResult isCustomException(Exception e)
+        private ActionResult HandleException(Exception e)
         {
-            if (
-                typeof(InvalidOperationException).IsInstanceOfType(e)
-                || typeof(ArgumentException).IsInstanceOfType(e)
-            )
+            if (e is InvalidOperationException || e is ArgumentNullException)
             {
                 return StatusCode(400, new { message = e.Message });
             }
 
-            if (typeof(KeyNotFoundException).IsInstanceOfType(e))
+            if (e is KeyNotFoundException)
             {
                 return StatusCode(404, new { message = e.Message });
             }
 
-            return StatusCode(500, new { message = e.Message });
+            return StatusCode(500, new { message = "Something went wrong!" });
         }
     }
 }
