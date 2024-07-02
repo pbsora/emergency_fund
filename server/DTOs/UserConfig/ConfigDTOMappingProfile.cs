@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using server.DTOs.UserConfig;
 using server.Model;
@@ -14,7 +10,7 @@ namespace server.Repositories.UserConfig
         {
             CreateMap<Config, CreateConfigDTO>().ReverseMap();
             CreateMap<Config, GetConfigDTO>().ReverseMap();
-            CreateMap<Config, UpdateConfigDTO>().ReverseMap();
+            CreateMap<Config, ConfigDTO>().ReverseMap();
         }
     }
 }

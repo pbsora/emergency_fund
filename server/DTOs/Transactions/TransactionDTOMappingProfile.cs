@@ -8,7 +8,7 @@ namespace server.DTOs.Transactions
         public TransactionDTOMappingProfile()
         {
             CreateMap<Transaction, NewTransactionDTO>().ReverseMap();
-            CreateMap<Transaction, GetTransactionDTO>().ReverseMap();
+            CreateMap<Transaction, TransactionDTO>().ReverseMap();
         }
     }
 }

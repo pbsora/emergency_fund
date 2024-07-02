@@ -76,7 +76,7 @@ namespace server.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutAsync([FromBody] UpdateConfigDTO updateConfigDTO)
+        public async Task<IActionResult> PutAsync([FromBody] ConfigDTO updateConfigDTO)
         {
             try
             {
@@ -85,12 +85,12 @@ namespace server.Controllers
                 if (string.IsNullOrEmpty(userId))
                     return BadRequest(new { message = "Not logged in!" });
 
-                GetConfigDTO oldConfig = await _repository.GetConfig(userId);
+                /* GetConfigDTO oldConfig = await _repository.GetConfig(userId);
 
                 if (oldConfig == null || userId != oldConfig.UserId!.ToString())
                 {
                     return BadRequest(new { message = "Configuration error!" });
-                }
+                } */
 
                 await _repository.UpdateConfig(updateConfigDTO);
 

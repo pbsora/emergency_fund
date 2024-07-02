@@ -19,7 +19,7 @@ namespace server.Repositories.Transactions
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GetTransactionDTO>> GetTransactionsAsync(
+        public async Task<IEnumerable<TransactionDTO>> GetTransactionsAsync(
             string userId,
             TransactionParams transactionParams
         )
@@ -27,7 +27,7 @@ namespace server.Repositories.Transactions
             var transactions = _context
                 .Transactions.Where(t => t.UserId == userId)
                 .OrderByDescending(f => f.Date)
-                .Select(t => new GetTransactionDTO
+                .Select(t => new TransactionDTO
                 {
                     TransactionId = t.TransactionId,
                     Amount = t.Amount,
@@ -67,7 +67,7 @@ namespace server.Repositories.Transactions
             return filteredTransactions;
         }
 
-        public async Task<GetTransactionDTO> SingleTransactionAsync(Guid transactionId)
+        public async Task<TransactionDTO> SingleTransactionAsync(Guid transactionId)
         {
             if (transactionId == Guid.Empty)
             {
@@ -83,7 +83,7 @@ namespace server.Repositories.Transactions
                 throw new KeyNotFoundException("Transaction not found");
             }
 
-            return _mapper.Map<GetTransactionDTO>(transaction);
+            return _mapper.Map<TransactionDTO>(transaction);
         }
 
         public async Task<Transaction> CreateTransactionAsync(
@@ -104,14 +104,14 @@ namespace server.Repositories.Transactions
             return transaction;
         }
 
-        public async Task<GetTransactionDTO> UpdateTransaction(GetTransactionDTO transactionDTO)
+        public async Task<TransactionDTO> UpdateTransaction(TransactionDTO transactionDTO)
         {
             Transaction transaction = _mapper.Map<Transaction>(transactionDTO);
 
             _context.Entry(transaction).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<GetTransactionDTO>(transaction);
+            return _mapper.Map<TransactionDTO>(transaction);
         }
 
         public async Task<Boolean> DeleteTransactionAsync(string transactionId)
@@ -140,14 +140,21 @@ namespace server.Repositories.Transactions
                 throw new KeyNotFoundException("No transactions found");
             }
 
+            Config config = await _context.Config.Where(c => c.UserId == userId).FirstAsync();
+
+            if (config == null)
+            {
+                throw new KeyNotFoundException("No config found");
+            }
+
             double total = await _context
                 .Transactions.Where(t => t.UserId == userId)
                 .SumAsync(t => t.Amount);
 
-            GetTransactionDTO? last = await _context
+            TransactionDTO? last = await _context
                 .Transactions.Where(t => t.UserId == userId)
                 .OrderByDescending(t => t.Date)
-                .Select(t => new GetTransactionDTO
+                .Select(t => new TransactionDTO
                 {
                     TransactionId = t.TransactionId,
                     Amount = t.Amount,
@@ -155,17 +162,13 @@ namespace server.Repositories.Transactions
                 })
                 .FirstOrDefaultAsync();
 
-            int months = await _context
-                .Config.Where(c => c.UserId == userId)
-                .Select(c => c.Months)
-                .FirstOrDefaultAsync();
-
             return new
             {
                 count,
                 total,
                 last,
-                months
+                months = config.Months,
+                monthlyExpenses = config.MonthlyExpenses
             };
         }
     }

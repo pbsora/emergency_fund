@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace server.DTOs.Transactions
 {
-    public class GetTransactionDTO
+    public class TransactionDTO
     {
         public Guid TransactionId { get; set; }
 

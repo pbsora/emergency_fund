@@ -44,7 +44,7 @@ namespace server.Repositories.UserConfig
             return true;
         }
 
-        public async Task<UpdateConfigDTO> UpdateConfig(UpdateConfigDTO config)
+        public async Task<ConfigDTO> UpdateConfig(ConfigDTO config)
         {
             var configToUpdate = _mapper.Map<Config>(config);
             _context.Entry(configToUpdate).State = EntityState.Modified;

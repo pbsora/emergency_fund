@@ -48,14 +48,14 @@ namespace server.Controllers
 
                 if (transactions == null)
                 {
-                    return StatusCode(404, "No transactions found");
+                    return StatusCode(404, new { message = "No transactions found" });
                 }
 
                 return Ok(transactions);
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -118,7 +118,7 @@ namespace server.Controllers
 
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> PutAsync([FromBody] GetTransactionDTO transactionDTO)
+        public async Task<IActionResult> PutAsync([FromBody] TransactionDTO transactionDTO)
         {
             try
             {
@@ -178,7 +178,7 @@ namespace server.Controllers
         }
 
         [HttpGet("status")]
-        public async Task<ActionResult<object>> GetStatus()
+        public async Task<IActionResult> GetStatus()
         {
             try
             {
@@ -191,9 +191,9 @@ namespace server.Controllers
 
                 return Ok(transactions);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return NotFound(new { message = "No transactions found" });
+                return isCustomException(e);
             }
         }
 
@@ -204,15 +204,15 @@ namespace server.Controllers
                 || typeof(ArgumentException).IsInstanceOfType(e)
             )
             {
-                return StatusCode(400, e.Message);
+                return StatusCode(400, new { message = e.Message });
             }
 
             if (typeof(KeyNotFoundException).IsInstanceOfType(e))
             {
-                return StatusCode(404, e.Message);
+                return StatusCode(404, new { message = e.Message });
             }
 
-            return StatusCode(500, e.Message);
+            return StatusCode(500, new { message = e.Message });
         }
     }
 }
