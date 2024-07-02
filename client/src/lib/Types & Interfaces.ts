@@ -32,6 +32,7 @@ export type Status = {
   total: number;
   count: number;
   last: Transaction;
+  months: number;
 };
 
 export type UserConfig = {

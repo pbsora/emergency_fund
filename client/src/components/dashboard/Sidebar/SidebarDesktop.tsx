@@ -3,7 +3,6 @@
 import { login } from "@/config/store/store";
 import { useAppDispatch } from "@/hooks/ReduxHooks";
 import { User } from "@/lib/Types & Interfaces";
-import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import SidebarLink from "./SidebarLink";
 import { MdDashboard } from "react-icons/md";
@@ -13,8 +12,6 @@ import { HiLogout } from "react-icons/hi";
 
 const Sidebar = ({ user }: { user: User }) => {
   const dispatch = useAppDispatch();
-
-  const { setTheme } = useTheme();
 
   useEffect(() => {
     dispatch(login(user));

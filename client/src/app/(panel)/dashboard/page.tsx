@@ -1,17 +1,22 @@
-import Recent from "@/components/dashboard/Recent/Recent";
 import Overview, {
   OverviewSkeleton,
-} from "@/components/dashboard/Overview";
+} from "@/components/dashboard/Overview/Overview";
+import Recent, {
+  RecentSkeleton,
+} from "@/components/dashboard/Recent/Recent";
+
 import { Suspense } from "react";
 
 const Dashboard = async () => {
   return (
-    <div className="flex flex-col md:flex-row w-full text-zinc-800 dark:text-white max-h-[100dvh] ">
+    <main className="flex flex-col md:flex-row w-full text-zinc-800 dark:text-white lg:max-h-[100dvh]">
       <Suspense fallback={<OverviewSkeleton />}>
         <Overview />
       </Suspense>
-      <Recent />
-    </div>
+      <Suspense fallback={<RecentSkeleton />}>
+        <Recent />
+      </Suspense>
+    </main>
   );
 };
 export default Dashboard;

@@ -16,9 +16,9 @@ const MonthsChange = ({ months }: { months: number }) => {
       className="flex flex-col gap-5 md:h-auto w-full sm:w-3/4 m-auto md:m-0 lg:w-2/4 xl:w-[35%] mb-10"
     >
       <h2 className="font-semibold text-lg text-center">
-        How many months do you want to save?
+        How many months of expenses do you want to save?
       </h2>
-      <div className="flex gap-1 items-center justify-center">
+      <div className="flex justify-around items-center ">
         <Button
           type="button"
           className="py-1 px-2"

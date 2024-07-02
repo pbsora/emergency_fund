@@ -9,19 +9,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Transaction } from "@/lib/Types & Interfaces";
-import API from "@/utils/api";
 import { Fragment } from "react";
 
-const wait = async (ms: number) =>
-  new Promise((res) => setTimeout(res, ms));
-
-const RecentTransactions = async () => {
-  await wait(1000);
-
-  const recentTransactions = await API.get(
-    "transactions?pagesize=3"
-  ).then((res) => res.json());
-
+const RecentTransactions = async ({
+  recentTransactions,
+}: {
+  recentTransactions: Transaction[];
+}) => {
   return (
     <div className="lg:max-h-[40%]">
       <div className="flex items-center justify-between">

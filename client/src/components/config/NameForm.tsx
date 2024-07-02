@@ -24,7 +24,7 @@ const NameForm = () => {
         <Input
           name="name"
           type="text"
-          className="border border-black"
+          className="border border-black dark:border-gray-300"
           placeholder="Name"
           defaultValue={Capitalize(name)}
         />

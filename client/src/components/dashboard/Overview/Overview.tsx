@@ -1,9 +1,11 @@
 import { Status } from "@/lib/Types & Interfaces";
 import API from "@/utils/api";
 import { formatCurrency } from "@/utils/formatters";
+import "react-circular-progressbar/dist/styles.css";
 
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { DateTime } from "ts-luxon";
+import OverviewProgressBar from "./OverviewProgressBar";
 
 const wait = async (ms: number) =>
   new Promise((res) => setTimeout(res, ms));
@@ -24,17 +26,18 @@ const Overview = async () => {
         description: "",
         transactionId: "",
       },
+      months: 0,
     };
   }
 
   return (
-    <div className="bg-gradient-to-b from-zinc-50 dark:from-[#1F1F1F] to-white from-80% lg:from-100% dark:bg-slate-900 md:w-[35%] h-screen container">
-      <h1 className="font-semibold text-2xl my-10">
+    <div className=" bg-zinc-50 dark:bg-zinc-950/50 md:dark:bg-[#1F1F1F]   md:w-[35%] h-screen container flex flex-col">
+      <h1 className="font-semibold text-2xl my-5 lg:my-10">
         Overview
       </h1>
-      <div className="flex flex-col gap-8 ">
+      <div className="flex flex-col gap-8 flex-1">
         <div className="flex flex-col pb-4 border-b dark:border-zinc-400">
-          <h2 className="text-sm font-light text-zinc-500">
+          <h2 className="text-sm font-light text-zinc-500 mb-1">
             Total Savings
           </h2>
           <div className="flex items-end justify-between">
@@ -48,7 +51,7 @@ const Overview = async () => {
           </div>
         </div>
         <div className="flex flex-col pb-4 border-b dark:border-zinc-400">
-          <h2 className="text-sm font-light text-zinc-500">
+          <h2 className="text-sm font-light text-zinc-500 mb-1">
             Count
           </h2>
           <div className="flex items-end justify-between">
@@ -61,8 +64,8 @@ const Overview = async () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col">
-          <h2 className="text-sm font-light text-zinc-500">
+        <div className="flex flex-col ">
+          <h2 className="text-sm font-light text-zinc-500 mb-1">
             Last
           </h2>
           <div className="flex items-end justify-between">
@@ -81,6 +84,7 @@ const Overview = async () => {
             </div>
           </div>
         </div>
+        <OverviewProgressBar value={66} />
       </div>
     </div>
   );
@@ -88,13 +92,13 @@ const Overview = async () => {
 
 export function OverviewSkeleton() {
   return (
-    <div className="bg-gradient-to-b from-zinc-50 dark:from-[#1F1F1F] to-white from-80% lg:from-100% dark:bg-slate-900 md:w-[35%] h-screen container">
-      <h1 className="font-semibold text-2xl my-10">
+    <div className=" bg-zinc-50 dark:bg-zinc-950/50 md:dark:bg-[#1F1F1F]   md:w-[35%] h-screen container flex flex-col">
+      <h1 className="font-semibold text-2xl my-5 lg:my-10">
         Overview
       </h1>
-      <div className="flex flex-col gap-8">
-        <div className="flex flex-col pb-4 border-b">
-          <h2 className="text-sm font-light text-zinc-500">
+      <div className="flex flex-col gap-8 flex-1">
+        <div className="flex flex-col pb-4 border-b dark:border-zinc-400">
+          <h2 className="text-sm font-light text-zinc-500  mb-1">
             Total Savings
           </h2>
           <div className="flex items-end justify-between">
@@ -106,7 +110,7 @@ export function OverviewSkeleton() {
           </div>
         </div>
         <div className="flex flex-col pb-4 border-b">
-          <h2 className="text-sm font-light text-zinc-500">
+          <h2 className="text-sm font-light text-zinc-500 mb-1">
             Count
           </h2>
           <div className="flex items-end justify-between">
@@ -118,7 +122,7 @@ export function OverviewSkeleton() {
           </div>
         </div>
         <div className="flex flex-col">
-          <h2 className="text-sm font-light text-zinc-500">
+          <h2 className="text-sm font-light text-zinc-500  mb-1">
             Last
           </h2>
           <div className="flex items-end justify-between">
@@ -129,6 +133,7 @@ export function OverviewSkeleton() {
             </div>
           </div>
         </div>
+        <OverviewProgressBar value={0} />
       </div>
     </div>
   );

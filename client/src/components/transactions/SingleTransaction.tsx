@@ -36,6 +36,7 @@ const SingleTransaction = ({
           <AvatarImage
             src={user.profilePicture}
             alt={user.name}
+            className="object-cover"
           />
           <AvatarFallback>U</AvatarFallback>
         </Avatar>
