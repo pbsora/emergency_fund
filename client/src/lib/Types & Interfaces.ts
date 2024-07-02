@@ -33,10 +33,10 @@ export type Status = {
   count: number;
   last: Transaction;
   months: number;
+  monthlyExpenses: number;
 };
 
 export type UserConfig = {
-  goalAmount: number;
-  monthlyIncome: number;
+  monthlyExpenses: number;
   months: number;
 };

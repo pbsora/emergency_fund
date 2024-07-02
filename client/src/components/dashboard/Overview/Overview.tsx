@@ -10,6 +10,19 @@ import OverviewProgressBar from "./OverviewProgressBar";
 const wait = async (ms: number) =>
   new Promise((res) => setTimeout(res, ms));
 
+const defaultStats = {
+  total: 0,
+  count: 0,
+  last: {
+    amount: 0,
+    date: new Date(),
+    description: "",
+    transactionId: "",
+  },
+  months: 0,
+  monthlyExpenses: 0,
+};
+
 const Overview = async () => {
   await wait(1000);
   let stats: Status = await API.get(
@@ -17,18 +30,17 @@ const Overview = async () => {
   ).then((res) => res.json());
 
   if (!stats.count) {
-    stats = {
-      total: 0,
-      count: 0,
-      last: {
-        amount: 0,
-        date: new Date(),
-        description: "",
-        transactionId: "",
-      },
-      months: 0,
-    };
+    stats = defaultStats;
   }
+
+  const percentage =
+    Number.parseFloat(
+      (
+        (stats.total /
+          (stats.monthlyExpenses * stats.months)) *
+        100
+      ).toFixed(1)
+    ) || 0;
 
   return (
     <div className=" bg-zinc-50 dark:bg-zinc-950/50 md:dark:bg-[#1F1F1F]   md:w-[35%] h-screen container flex flex-col">
@@ -84,7 +96,7 @@ const Overview = async () => {
             </div>
           </div>
         </div>
-        <OverviewProgressBar value={66} />
+        <OverviewProgressBar value={percentage} />
       </div>
     </div>
   );

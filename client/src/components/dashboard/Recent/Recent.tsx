@@ -5,37 +5,22 @@ import RecentTransactions, {
 import ThisYear from "./ThisYear";
 import API from "@/utils/api";
 import { Transaction } from "@/lib/Types & Interfaces";
-import { DateTime } from "ts-luxon";
 
 const Recent = async () => {
-  const recentTransactions: Transaction[] = await API.get(
+  let recentTransactions: Transaction[] = await API.get(
     "transactions"
   ).then((res) => res.json());
 
-  const formattedTransactions = recentTransactions
-    .map((transaction) => ({
-      ...transaction,
-      date: DateTime.fromISO(
-        transaction.date.toString()
-      ).toFormat("LLL"),
-    }))
-    .reduce<{ [key: string]: number }>(
-      (acc, transaction) => {
-        acc[transaction.date] = acc[transaction.date]
-          ? acc[transaction.date] + transaction.amount
-          : transaction.amount;
-
-        return acc;
-      },
-      {}
-    );
+  recentTransactions = Array.isArray(recentTransactions)
+    ? recentTransactions
+    : [];
 
   const lastThree = recentTransactions.slice(0, 3);
 
   return (
     <div className="max-h-screen md:w-[65%] flex flex-col container dark:bg-zinc-950/50 h-screen">
       <TopBar />
-      <ThisYear transactions={formattedTransactions} />
+      <ThisYear transactions={recentTransactions} />
       <RecentTransactions recentTransactions={lastThree} />
     </div>
   );

@@ -9,12 +9,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Transaction } from "@/lib/Types & Interfaces";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 import { Fragment } from "react";
 
 const RecentTransactions = async ({
   recentTransactions,
 }: {
-  recentTransactions: Transaction[];
+  recentTransactions?: Transaction[];
 }) => {
   return (
     <div className="lg:max-h-[40%]">
@@ -43,7 +45,7 @@ const RecentTransactions = async ({
         </span>
       </div>
       <div className="flex flex-col mt-2 h-full gap-1 divide-y-2 divide-zinc-200/80">
-        {recentTransactions ? (
+        {recentTransactions?.length ? (
           recentTransactions.map(
             (transaction: Transaction, i: number) => (
               <Fragment key={transaction.transactionId}>
@@ -54,7 +56,15 @@ const RecentTransactions = async ({
             )
           )
         ) : (
-          <div>No transactions yet</div>
+          <div className="w-full h-full flex items-center justify-center">
+            <Link
+              href={"/transactions"}
+              className="flex items-center justify-center gap-3 border border-zinc-300 rounded-md p-2 cursor-pointer hover:bg-zinc-100 duration-200"
+            >
+              <Plus className="text-green-500" />
+              <span>New transaction</span>
+            </Link>
+          </div>
         )}
       </div>
     </div>

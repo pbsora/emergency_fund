@@ -10,7 +10,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="w-full py-2 px-4 md:p-4 lg:p-8 flex flex-col-reverse md:flex-row items-center justify-between gap-4 lg:hidden shadow-lg">
+    <div className="w-full py-2 z-10 px-4 md:p-4 lg:p-8 flex flex-col-reverse md:flex-row items-center justify-between gap-4 lg:hidden shadow-lg">
       <div className="flex items-center justify-between lg:justify-end w-full lg:w-auto gap-6">
         <div className="lg:hidden text-2xl">
           <SidebarMobile />

@@ -1,11 +1,11 @@
 "use client";
+import { Transaction } from "@/lib/Types & Interfaces";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useMemo } from "react";
 import { DateTime } from "ts-luxon";
-import { map } from "zod";
 
 type ThisYearProps = {
-  transactions: { [key: string]: number };
+  transactions: Transaction[];
 };
 
 const ThisYear = ({ transactions }: ThisYearProps) => {
@@ -17,7 +17,29 @@ const ThisYear = ({ transactions }: ThisYearProps) => {
     []
   );
 
-  const data = new Map(Object.entries(transactions));
+  const formattedTransactions = useMemo(() => {
+    return transactions
+      .map((transaction) => ({
+        ...transaction,
+        date: DateTime.fromISO(
+          transaction.date.toString()
+        ).toFormat("LLL"),
+      }))
+      .reduce<{ [key: string]: number }>(
+        (acc, transaction) => {
+          acc[transaction.date] = acc[transaction.date]
+            ? acc[transaction.date] + transaction.amount
+            : transaction.amount;
+
+          return acc;
+        },
+        {}
+      );
+  }, [transactions]);
+
+  const data = new Map(
+    Object.entries(formattedTransactions)
+  );
 
   const series = useMemo(
     () => months.map((month) => data.get(month) || 0),
