@@ -48,6 +48,9 @@ const ThisYear = ({ transactions }: ThisYearProps) => {
 
   return (
     <div className="h-[50%] w-full">
+      <h2 className="text-2xl lg:ml-10 font-semibold  mt-10 lg:mt-2 lg:hidden">
+        Last 12 months
+      </h2>
       <BarChart
         xAxis={[
           {
@@ -57,7 +60,6 @@ const ThisYear = ({ transactions }: ThisYearProps) => {
         ]}
         series={[{ data: series }]}
         colors={["#FFC107"]}
-        className="w-full"
       />
     </div>
   );

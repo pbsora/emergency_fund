@@ -19,7 +19,7 @@ const RecentTransactions = async ({
   recentTransactions?: Transaction[];
 }) => {
   return (
-    <div className="lg:max-h-[40%]">
+    <div className="lg:max-h-[40%] lg:mt-0">
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-xl">
           Recent Activity

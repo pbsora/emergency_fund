@@ -21,7 +21,7 @@ const defaultStats = {
   },
   months: 0,
   monthlyExpenses: 0,
-};
+} as const;
 
 const Overview = async () => {
   await wait(1000);
@@ -44,7 +44,7 @@ const Overview = async () => {
 
   return (
     <div className=" bg-zinc-50 dark:bg-zinc-950/50 md:dark:bg-[#1F1F1F]   md:w-[35%] h-screen container flex flex-col">
-      <h1 className="font-semibold text-2xl my-5 lg:my-10">
+      <h1 className="font-semibold text-2xl my-10">
         Overview
       </h1>
       <div className="flex flex-col gap-8 flex-1">
