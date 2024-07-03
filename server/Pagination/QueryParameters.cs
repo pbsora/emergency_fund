@@ -3,13 +3,13 @@ namespace server.Pagination;
 public class QueryParameters
 {
     const int maxPageSize = 20;
-    public int PageNumber { get; set; } = 1;
+    public int Page { get; set; } = 1;
 
-    private int _pageSize = maxPageSize;
+    private int _limit = maxPageSize;
 
-    public int PageSize
+    public int Limit
     {
-        get => _pageSize;
-        set => _pageSize = (value > maxPageSize) ? maxPageSize : value;
+        get => _limit;
+        set => _limit = (value > maxPageSize) ? maxPageSize : value;
     }
 }

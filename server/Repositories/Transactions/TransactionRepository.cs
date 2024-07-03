@@ -55,8 +55,8 @@ namespace server.Repositories.Transactions
             }
 
             var filteredTransactions = await transactions.ToPagedListAsync(
-                transactionParams.PageNumber,
-                transactionParams.PageSize
+                transactionParams.Page,
+                transactionParams.Limit
             );
 
             if (filteredTransactions.Count == 0)
@@ -95,7 +95,8 @@ namespace server.Repositories.Transactions
             {
                 Amount = transactionDTO.Amount,
                 UserId = userId,
-                Description = transactionDTO.Description
+                Description = transactionDTO.Description,
+                Date = transactionDTO.Date
             };
 
             await _context.Transactions.AddAsync(transaction);
