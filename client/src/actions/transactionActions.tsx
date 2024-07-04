@@ -70,8 +70,13 @@ export const deleteTransactionAction = async (
   }
 };
 
-export const fetchTransactions = async (page = 1) => {
-  const res = await API.get(`/transactions?page=${page}`);
+export const fetchTransactions = async (
+  page = 1,
+  filter: string
+) => {
+  const res = await API.get(
+    `/transactions?page=${page}&criteria=${filter}`
+  );
 
   const pagination: Pagination = JSON.parse(
     res.headers.get("X-Pagination") as string

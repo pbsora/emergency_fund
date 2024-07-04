@@ -20,12 +20,11 @@ const TransactionsPage = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("newest");
 
-  const { data } = useQuery({
-    queryKey: ["transactions", page],
-    queryFn: async () => await fetchTransactions(page),
+  const { data, refetch } = useQuery({
+    queryKey: ["transactions", page, filter],
+    queryFn: async () =>
+      await fetchTransactions(page, filter),
   });
-
-  console.log(filter);
 
   let pagination, transactions;
 
@@ -71,32 +70,20 @@ const TransactionsPage = () => {
       </div>
       <hr className="border-b border-zinc-200 mt-4" />
       <div className="w-full mt-3">
-        <Select>
+        <Select onValueChange={(e) => setFilter(e)}>
           <SelectTrigger className="w-[180px] ml-auto">
             <SelectValue
-              placeholder="Last month"
+              placeholder="Filter by date"
               defaultValue={filter}
             />
           </SelectTrigger>
-          <SelectContent
-            onChange={(e) => console.log(e.target)}
-          >
-            <SelectItem
-              value="newest"
-              onClick={() => setFilter("newest")}
-            >
-              Newest
-            </SelectItem>
-            <SelectItem
-              value="oldest"
-              onClick={() => setFilter("oldest")}
-            >
-              Oldest
-            </SelectItem>
+          <SelectContent>
+            <SelectItem value="newest">Newest</SelectItem>
+            <SelectItem value="oldest">Oldest</SelectItem>
           </SelectContent>
         </Select>
       </div>
-      <Transactions transactions={transactions} />
+      <Transactions transactions={data?.transactions} />
     </main>
   );
 };

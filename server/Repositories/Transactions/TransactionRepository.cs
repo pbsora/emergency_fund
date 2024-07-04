@@ -19,14 +19,13 @@ namespace server.Repositories.Transactions
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<TransactionDTO>> GetTransactionsAsync(
+        public async Task<IPagedList<TransactionDTO>> GetTransactionsAsync(
             string userId,
             TransactionParams transactionParams
         )
         {
             var transactions = _context
                 .Transactions.Where(t => t.UserId == userId)
-                .OrderByDescending(f => f.Date)
                 .Select(t => new TransactionDTO
                 {
                     TransactionId = t.TransactionId,
@@ -38,13 +37,11 @@ namespace server.Repositories.Transactions
                 .AsQueryable();
 
             //Criteria and amount filters
-            if (!string.IsNullOrEmpty(transactionParams.Criteria) && transactionParams.Amount > 0)
-            {
-                if (transactionParams.Criteria == "gt")
-                    transactions = transactions.Where(t => t.Amount > transactionParams.Amount);
-                else if (transactionParams.Criteria == "lt")
-                    transactions = transactions.Where(t => t.Amount < transactionParams.Amount);
-            }
+            transactions =
+                !string.IsNullOrEmpty(transactionParams.Criteria)
+                && transactionParams.Criteria == "newest"
+                    ? transactions.OrderBy(t => t.Amount)
+                    : transactions.OrderByDescending(t => t.Amount);
 
             //Month filter
             if (transactionParams.Month > 0 && transactionParams.Year > 0)

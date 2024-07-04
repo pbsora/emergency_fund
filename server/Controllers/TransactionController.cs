@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using server.DTOs.Transactions;
 using server.Model;
 using server.Pagination.QueryParams;
 using server.Repositories.Transactions;
+using X.PagedList;
 
 namespace server.Controllers
 {
@@ -26,7 +28,7 @@ namespace server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTransactionsAsync(
+        public async Task<ActionResult<IPagedList<TransactionDTO>>> GetTransactionsAsync(
             [FromQuery] TransactionParams transactionParams
         )
         {
@@ -51,7 +53,7 @@ namespace server.Controllers
                     return StatusCode(404, new { message = "No transactions found" });
                 }
 
-                return Ok(transactions);
+                return PaginatedTransactions(transactions);
             }
             catch (Exception e)
             {
@@ -210,6 +212,25 @@ namespace server.Controllers
             }
 
             return StatusCode(500, new { message = "Something went wrong!" });
+        }
+
+        private ActionResult<IPagedList<TransactionDTO>> PaginatedTransactions(
+            IPagedList<TransactionDTO> transactions
+        )
+        {
+            var metadata = new
+            {
+                transactions.Count,
+                transactions.PageSize,
+                transactions.PageCount,
+                transactions.TotalItemCount,
+                transactions.HasNextPage,
+                transactions.HasPreviousPage,
+                transactions.PageNumber
+            };
+
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(metadata));
+            return Ok(transactions);
         }
     }
 }

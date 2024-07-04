@@ -1,12 +1,13 @@
 using server.DTOs.Transactions;
 using server.Model;
 using server.Pagination.QueryParams;
+using X.PagedList;
 
 namespace server.Repositories.Transactions
 {
     public interface ITransactionRepository
     {
-        Task<IEnumerable<TransactionDTO>> GetTransactionsAsync(
+        Task<IPagedList<TransactionDTO>> GetTransactionsAsync(
             string userId,
             TransactionParams transactionParams
         );
