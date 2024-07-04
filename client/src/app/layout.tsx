@@ -4,6 +4,11 @@ import "./globals.css";
 import { StoreProvider } from "@/config/store/StoreProvider";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import {
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+import ReactQueryProvider from "@/config/react-query/ReactQueryProvider";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -29,14 +34,16 @@ export default function RootLayout({
             fontSans.variable
           )}
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
+          <ReactQueryProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </ReactQueryProvider>
         </body>
       </html>
     </StoreProvider>

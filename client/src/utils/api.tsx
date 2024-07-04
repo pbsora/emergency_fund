@@ -66,6 +66,17 @@ class FetchWrapper {
           : JSON.stringify(data),
     });
   }
+
+  delete(url: string) {
+    url = url.charAt(0) === "/" ? url.slice(1) : url;
+    return fetch(this.baseURL + url, {
+      method: "delete",
+      credentials: "include",
+      headers: {
+        Cookie: `token=${cookies().get("token")?.value}`,
+      },
+    });
+  }
 }
 
 export const API = new FetchWrapper();

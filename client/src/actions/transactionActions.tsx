@@ -1,10 +1,15 @@
 "use server";
 
 import {
+  Pagination,
+  Transaction,
+} from "@/lib/Types & Interfaces";
+import {
   AggregateErrorHelper,
   ResponseMessageHelper,
 } from "@/lib/helpers";
 import API from "@/utils/api";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 const transactionSchema = z.object({
@@ -44,4 +49,38 @@ export const newTransactionAction = async (
     }
     return { message: error.message };
   }
+};
+
+export const deleteTransactionAction = async (
+  id: string
+) => {
+  try {
+    const res = await API.delete(`transactions/${id}`);
+
+    if (!res.ok) {
+      return await ResponseMessageHelper(res);
+    }
+
+    revalidatePath("/transactions");
+    revalidatePath("/dashboard");
+  } catch (error) {
+    if (Object.values(error)[0] instanceof AggregateError) {
+      return AggregateErrorHelper(error);
+    }
+  }
+};
+
+export const fetchTransactions = async (page = 1) => {
+  const res = await API.get(`/transactions?page=${page}`);
+
+  const pagination: Pagination = JSON.parse(
+    res.headers.get("X-Pagination") as string
+  );
+
+  const transactions: Transaction[] = await res.json();
+
+  return {
+    pagination,
+    transactions,
+  };
 };

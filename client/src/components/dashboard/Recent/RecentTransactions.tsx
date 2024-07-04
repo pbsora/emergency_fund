@@ -1,6 +1,6 @@
-import SingleTransaction, {
-  SingleTransactionSkeleton,
-} from "@/components/transactions/SingleTransaction";
+import RecentSingleTransaction, {
+  RecentSingleTransactionSkeleton,
+} from "@/components/transactions/RecentSingleTransaction";
 import {
   Select,
   SelectContent,
@@ -49,7 +49,7 @@ const RecentTransactions = async ({
           recentTransactions.map(
             (transaction: Transaction, i: number) => (
               <Fragment key={transaction.transactionId}>
-                <SingleTransaction
+                <RecentSingleTransaction
                   transaction={transaction}
                 />
               </Fragment>
@@ -102,7 +102,7 @@ export const RecentTransactionsSkeleton = () => {
       <div className="flex flex-col mt-2 h-full gap-1 divide-y-2 divide-zinc-200/80">
         {new Array(3).fill("").map((_, i: number) => (
           <Fragment key={i}>
-            <SingleTransactionSkeleton />
+            <RecentSingleTransactionSkeleton />
           </Fragment>
         ))}
       </div>

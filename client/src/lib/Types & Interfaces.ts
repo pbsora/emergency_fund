@@ -23,7 +23,7 @@ export interface CustomAggregateError
 export type Transaction = {
   transactionId: string;
   amount: number;
-  date: Date;
+  date: Date | string;
   description?: string;
   userId?: string;
 };
@@ -39,4 +39,14 @@ export type Status = {
 export type UserConfig = {
   monthlyExpenses: number;
   months: number;
+};
+
+export type Pagination = {
+  Count: number;
+  PageSize: number;
+  PageCount: number;
+  TotalItemCount: number;
+  HasNextPage: boolean;
+  HasPreviousPage: boolean;
+  PageNumber: number;
 };

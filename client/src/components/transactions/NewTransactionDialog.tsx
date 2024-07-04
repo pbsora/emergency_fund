@@ -36,14 +36,19 @@ const NewTransactionDialog = () => {
   }, []);
 
   if (!Mounted) {
-    return;
+    return (
+      <div className="hidden md:flex border rounded-md hover:bg-zinc-300  py-2 px-2 dark:bg-zinc-200 dark:hover:bg-zinc-400 duration-200 text-zinc-900">
+        <Plus className="text-green-500 dark:text-green-400 mr-2" />
+        Add Transaction
+      </div>
+    );
   }
 
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="border rounded-md hover:bg-zinc-300 flex py-2 px-2 dark:bg-zinc-200 dark:hover:bg-zinc-400 duration-200 text-zinc-900">
-          <Plus className="text-green-500 mr-2 dark:" />
+        <div className="hidden md:flex border rounded-md hover:bg-zinc-300  py-2 px-2 dark:bg-zinc-200 dark:hover:bg-zinc-400 duration-200 text-zinc-900">
+          <Plus className="text-green-500 mr-2 dark:text-green-400" />
           Add Transaction
         </div>
       </DialogTrigger>
@@ -64,14 +69,16 @@ const NewTransactionDialog = () => {
             <Input
               type="number"
               name="amount"
+              inputMode="numeric"
               placeholder="$1234.6789"
+              pattern="[0-9]+"
             />
           </div>
           <div className="flex flex-col gap-3">
             <Label htmlFor="description">Description</Label>
             <textarea
               rows={3}
-              className="w-full p-2 border border-zinc-200 rounded-md resize-none"
+              className="w-full p-2 border border-zinc-200 dark:border-zinc-800 rounded-md resize-none dark:bg-background"
               placeholder="What is this transaction for?"
               name="description"
             />

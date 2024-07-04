@@ -43,7 +43,7 @@ const Overview = async () => {
     ) || 0;
 
   return (
-    <div className=" bg-zinc-50 dark:bg-zinc-950/50 md:dark:bg-[#1F1F1F]   md:w-[35%] h-screen container flex flex-col">
+    <div className=" bg-zinc-50 dark:bg-zinc-950/50 md:dark:bg-[#1F1F1F] md:w-[35%] h-screen container flex flex-col">
       <h1 className="font-semibold text-2xl my-10">
         Overview
       </h1>
