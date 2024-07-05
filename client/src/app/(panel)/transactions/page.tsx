@@ -20,7 +20,7 @@ const TransactionsPage = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("newest");
 
-  const { data, refetch } = useQuery({
+  const { data } = useQuery({
     queryKey: ["transactions", page, filter],
     queryFn: async () =>
       await fetchTransactions(page, filter),

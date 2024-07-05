@@ -41,7 +41,7 @@ const SingleTransaction = ({
           typeof transaction.date === "string"
             ? new Date(transaction.date)
             : transaction.date
-        ).toFormat("MM/dd")}
+        ).toFormat("MM/dd/yyyy")}
       </div>
       <div className="w-1/4 text-end">
         {formatCurrency(transaction.amount)}

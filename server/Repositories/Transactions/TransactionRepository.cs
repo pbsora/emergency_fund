@@ -40,8 +40,8 @@ namespace server.Repositories.Transactions
             transactions =
                 !string.IsNullOrEmpty(transactionParams.Criteria)
                 && transactionParams.Criteria == "newest"
-                    ? transactions.OrderBy(t => t.Amount)
-                    : transactions.OrderByDescending(t => t.Amount);
+                    ? transactions.OrderByDescending(t => t.Date)
+                    : transactions.OrderBy(t => t.Date);
 
             //Month filter
             if (transactionParams.Month > 0 && transactionParams.Year > 0)
