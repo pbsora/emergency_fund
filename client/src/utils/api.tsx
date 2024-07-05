@@ -52,6 +52,19 @@ class FetchWrapper {
     });
   }
 
+  put(url: string, data: unknown) {
+    url = url.charAt(0) === "/" ? url.slice(1) : url;
+    return fetch(this.baseURL + url, {
+      method: "put",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        Cookie: `token=${cookies().get("token")?.value}`,
+      },
+      body: JSON.stringify(data),
+    });
+  }
+
   patch(url: string, data?: FormData | unknown) {
     url = url.charAt(0) === "/" ? url.slice(1) : url;
     return fetch(this.baseURL + url, {

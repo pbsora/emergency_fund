@@ -11,18 +11,41 @@ import { Capitalize } from "@/lib/helpers";
 import { DateTime } from "ts-luxon";
 import { formatCurrency } from "@/utils/formatters";
 import TransactionDetailsDialog from "./TransactionDetailsDialog";
+import { animate, motion } from "framer-motion";
 
 type Props = {
   transaction: Transaction;
   user: User;
+  i: number;
+};
+
+const fadeInAnimationVariants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+  },
+  animate: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.1,
+    },
+  }),
 };
 
 const SingleTransaction = ({
   transaction,
   user,
+  i,
 }: Props) => {
   return (
-    <div className="py-2 flex items-center w-full">
+    <motion.div
+      className={`py-2 flex items-center w-full `}
+      variants={fadeInAnimationVariants}
+      initial="initial"
+      animate="animate"
+      custom={i}
+    >
       <div className="flex items-center gap-5 w-1/4">
         <Avatar className="size-8">
           <AvatarImage
@@ -51,14 +74,14 @@ const SingleTransaction = ({
           transaction={transaction}
         />
       </div>
-    </div>
+    </motion.div>
   );
 };
 export default SingleTransaction;
 
 export const SingleTransactionSkeleton = () => {
   return (
-    <div className="py-2 flex items-center w-full">
+    <div className="py-3 flex items-center w-full animate-stagger500">
       <div className="flex items-center gap-5 w-1/4">
         <Avatar className="size-8">
           <AvatarFallback>U</AvatarFallback>

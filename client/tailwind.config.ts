@@ -76,10 +76,22 @@ const config = {
           },
           to: { height: "0" },
         },
+        stagger: {
+          from: { opacity: "0" },
+          to: {
+            opacity: "1",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        stagger100: "stagger 0.1s ease-out",
+        stagger200: "stagger 0.2s ease-out",
+        stagger300: "stagger 0.3s ease-out",
+        stagger400: "stagger 0.4s ease-out",
+        stagger500: "stagger 0.5s ease-out",
+        stagger600: "stagger 0.6s ease-out",
       },
     },
   },

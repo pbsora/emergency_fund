@@ -95,7 +95,7 @@ const Transactions = () => {
             Date
           </span>
 
-          <span className="text-zinc-400 text-sm flex-1 text-end pr-3">
+          <span className="text-zinc-400 text-sm flex-1 text-end pr-">
             Amount
           </span>
 
@@ -105,11 +105,12 @@ const Transactions = () => {
         </div>
         <div className="flex-1 w-full mb-2 flex flex-col gap-3 divide-y-2 divide-zinc-300 mt-5">
           {transactions.length > 0 &&
-            transactions?.map((transaction) => (
+            transactions?.map((transaction, i) => (
               <Fragment key={transaction.transactionId}>
                 <SingleTransaction
                   transaction={transaction}
                   user={user}
+                  i={i}
                 />
               </Fragment>
             ))}

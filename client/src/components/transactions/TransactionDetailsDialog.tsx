@@ -23,7 +23,12 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar } from "../ui/calendar";
 import { useRouter } from "next/navigation";
-import { deleteTransactionAction } from "@/actions/transactionActions";
+import {
+  deleteTransactionAction,
+  updateTransactionAction,
+} from "@/actions/transactionActions";
+import { useFormState, useFormStatus } from "react-dom";
+import { useAppSelector } from "@/hooks/ReduxHooks";
 
 type Props = {
   transaction: Transaction;
@@ -32,6 +37,17 @@ type Props = {
 const TransactionDetailsDialog = ({
   transaction,
 }: Props) => {
+  const { userId } = useAppSelector(
+    (state) => state.user.value
+  );
+  const [result, action] = useFormState(
+    updateTransactionAction.bind(
+      null,
+      userId,
+      transaction.transactionId
+    ),
+    null
+  );
   const [date, setDate] = useState<Date>(
     typeof transaction.date === "string"
       ? new Date(transaction.date)
@@ -52,11 +68,19 @@ const TransactionDetailsDialog = ({
             Transaction details
           </DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col gap-4">
+        <form
+          className="flex flex-col gap-4"
+          action={action}
+        >
           <div className="flex flex-col gap-2">
             <Label>Amount</Label>
             <Input
-              value={transaction.amount}
+              type="number"
+              name="amount"
+              inputMode="numeric"
+              placeholder="$1234.6789"
+              pattern="[0-9]+"
+              defaultValue={transaction.amount}
               disabled={!edit}
             />
           </div>
@@ -67,7 +91,7 @@ const TransactionDetailsDialog = ({
               className="w-full p-2 border border-zinc-200 dark:border-zinc-800 rounded-md resize-none dark:bg-background"
               placeholder="What is this transaction for?"
               name="description"
-              value={transaction.description}
+              defaultValue={transaction.description}
               disabled={!edit}
             />
           </div>
@@ -105,18 +129,22 @@ const TransactionDetailsDialog = ({
             <input
               type="text"
               name="date"
-              value={date?.toISOString()}
+              defaultValue={date?.toISOString()}
               hidden
             />
           </div>
+          {result && result.success ? (
+            <p className=" text-sm text-center">
+              {result.success}
+            </p>
+          ) : (
+            <p className="text-red-500 text-sm text-center">
+              {result?.message}
+            </p>
+          )}
           <div className="flex gap-3 w-full">
             {edit ? (
-              <Button
-                variant={"outline"}
-                className="w-full"
-              >
-                Update
-              </Button>
+              <UpdateButton />
             ) : (
               <DeleteTransactionButton
                 id={transaction.transactionId}
@@ -125,12 +153,13 @@ const TransactionDetailsDialog = ({
             <Button
               variant={"default"}
               className="w-full"
+              type="button"
               onClick={() => setEdit((prev) => !prev)}
             >
               Edit
             </Button>
           </div>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
@@ -150,6 +179,7 @@ const DeleteTransactionButton = ({
       variant={"destructive"}
       className="w-full"
       disabled={isPending}
+      type="button"
       onClick={() =>
         startTransition(async () => {
           await deleteTransactionAction(id);
@@ -158,6 +188,21 @@ const DeleteTransactionButton = ({
       }
     >
       Delete
+    </Button>
+  );
+};
+
+const UpdateButton = () => {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button
+      variant={"outline"}
+      className="w-full"
+      type="submit"
+      disabled={pending}
+    >
+      {pending ? "Updating" : "Update"}
     </Button>
   );
 };

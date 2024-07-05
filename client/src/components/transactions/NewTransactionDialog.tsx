@@ -118,10 +118,14 @@ const NewTransactionDialog = () => {
               hidden
             />
           </div>
-          {result && (
-            <div className="text-red-500 text-sm w-full text-center ">
-              {result.message}
-            </div>
+          {result && result.success ? (
+            <p className=" text-sm text-center">
+              {result.success}
+            </p>
+          ) : (
+            <p className="text-red-500 text-sm text-center">
+              {result?.message}
+            </p>
           )}
           <SubmitButton />
         </form>

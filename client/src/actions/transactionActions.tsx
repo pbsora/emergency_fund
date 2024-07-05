@@ -70,6 +70,40 @@ export const deleteTransactionAction = async (
   }
 };
 
+export const updateTransactionAction = async (
+  userId: string,
+  transactionId: string,
+  _: unknown,
+  formData: FormData
+) => {
+  try {
+    const { data, error } = transactionSchema.safeParse(
+      Object.fromEntries(formData.entries())
+    );
+
+    if (error) {
+      return { message: error.errors[0].message };
+    }
+
+    const res = await API.put("transactions", {
+      ...data,
+      userId,
+      transactionId,
+    });
+
+    if (!res.ok) {
+      return await ResponseMessageHelper(res);
+    }
+    revalidatePath("/transactions");
+    return { success: "Transaction updated successfully!" };
+  } catch (error) {
+    if (Object.values(error)[0] instanceof AggregateError) {
+      return AggregateErrorHelper(error);
+    }
+    return { message: error.message };
+  }
+};
+
 export const fetchTransactions = async (
   page = 1,
   filter: string
