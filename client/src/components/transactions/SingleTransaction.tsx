@@ -55,3 +55,25 @@ const SingleTransaction = ({
   );
 };
 export default SingleTransaction;
+
+export const SingleTransactionSkeleton = () => {
+  return (
+    <div className="py-2 flex items-center w-full">
+      <div className="flex items-center gap-5 w-1/4">
+        <Avatar className="size-8">
+          <AvatarFallback>U</AvatarFallback>
+        </Avatar>
+        <span className="text-sm hidden md:block  w-32 h-6 bg-zinc-200 rounded-full animate-pulse"></span>
+      </div>
+      <div className="w-1/4 text-center text-sm ">
+        <div className="w-32 h-6 bg-zinc-200 rounded-full animate-pulse m-auto"></div>
+      </div>
+      <div className="w-1/4 text-end">
+        <div className=" w-20 h-6 bg-zinc-200 rounded-full animate-pulse ml-auto"></div>
+      </div>
+      <div className="w-1/4 text-end">
+        <div className=" w-32 h-6 bg-zinc-200 rounded-full animate-pulse ml-auto"></div>
+      </div>
+    </div>
+  );
+};

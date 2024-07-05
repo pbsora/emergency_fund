@@ -75,7 +75,7 @@ export const fetchTransactions = async (
   filter: string
 ) => {
   const res = await API.get(
-    `/transactions?page=${page}&criteria=${filter}`
+    `/transactions?limit=6&page=${page}&criteria=${filter}`
   );
 
   const pagination: Pagination = JSON.parse(
