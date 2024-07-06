@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace server.DTOs.Transactions
 {
-    public class TransactionDTO
+    public class TransactionDTO : IValidatableObject
     {
         public Guid TransactionId { get; set; }
 
@@ -15,5 +15,16 @@ namespace server.DTOs.Transactions
         public string? Description { get; set; }
 
         public string? UserId { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Date > DateTime.Now)
+            {
+                yield return new ValidationResult(
+                    "Date cannot be in the future",
+                    new[] { nameof(Date) }
+                );
+            }
+        }
     }
 }

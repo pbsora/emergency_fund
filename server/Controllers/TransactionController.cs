@@ -104,6 +104,13 @@ namespace server.Controllers
                     return StatusCode(403);
                 }
 
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(
+                        new { message = ModelState.Values.First().Errors.First().ErrorMessage }
+                    );
+                }
+
                 var transaction = await _repository.CreateTransactionAsync(transactionDTO, userId);
 
                 return new CreatedAtRouteResult(
@@ -128,6 +135,13 @@ namespace server.Controllers
 
                 if (string.IsNullOrEmpty(userId))
                     return Unauthorized(new { message = "Not logged in" });
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(
+                        new { message = ModelState.Values.First().Errors.First().ErrorMessage }
+                    );
+                }
 
                 var result = await _repository.UpdateTransaction(transactionDTO);
 

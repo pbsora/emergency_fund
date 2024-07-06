@@ -60,6 +60,11 @@ namespace server.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(
+                        new { message = ModelState.Values.First().Errors.First().ErrorMessage }
+                    );
+
                 Boolean config = await _repository.CreateConfig(configDTO);
 
                 if (config == false)
@@ -87,6 +92,11 @@ namespace server.Controllers
 
                 if (string.IsNullOrEmpty(userId))
                     return BadRequest(new { message = "Not logged in!" });
+
+                if (!ModelState.IsValid)
+                    return BadRequest(
+                        new { message = ModelState.Values.First().Errors.First().ErrorMessage }
+                    );
 
                 /* GetConfigDTO oldConfig = await _repository.GetConfig(userId);
 
