@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CgDetailsMore } from "react-icons/cg";
 import { Transaction } from "@/lib/Types & Interfaces";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import {
   Popover,
   PopoverContent,
@@ -32,22 +32,17 @@ import { useAppSelector } from "@/hooks/ReduxHooks";
 
 type Props = {
   transaction: Transaction;
+  refetch: () => void;
 };
 
 const TransactionDetailsDialog = ({
   transaction,
+  refetch,
 }: Props) => {
   const { userId } = useAppSelector(
     (state) => state.user.value
   );
-  const [result, action] = useFormState(
-    updateTransactionAction.bind(
-      null,
-      userId,
-      transaction.transactionId
-    ),
-    null
-  );
+
   const [date, setDate] = useState<Date>(
     typeof transaction.date === "string"
       ? new Date(transaction.date)
@@ -55,12 +50,28 @@ const TransactionDetailsDialog = ({
   );
   const [edit, setEdit] = useState(false);
 
+  const [result, action] = useFormState(
+    updateTransactionAction.bind(
+      null,
+      userId,
+      transaction.transactionId,
+      date?.toISOString()
+    ),
+    null
+  );
+
+  useEffect(() => {
+    if (result && result.success) {
+      refetch();
+    }
+  }, [result]);
+
   return (
     <Dialog>
       <DialogTrigger>
-        <Button variant={"outline"}>
+        <div className="py-2 px-3 border rounded-lg">
           <CgDetailsMore />
-        </Button>
+        </div>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -126,12 +137,6 @@ const TransactionDetailsDialog = ({
                 />
               </PopoverContent>
             </Popover>
-            <input
-              type="text"
-              name="date"
-              defaultValue={date?.toISOString()}
-              hidden
-            />
           </div>
           {result && result.success ? (
             <p className=" text-sm text-center">
@@ -148,6 +153,7 @@ const TransactionDetailsDialog = ({
             ) : (
               <DeleteTransactionButton
                 id={transaction.transactionId}
+                refetch={refetch}
               />
             )}
             <Button
@@ -156,7 +162,7 @@ const TransactionDetailsDialog = ({
               type="button"
               onClick={() => setEdit((prev) => !prev)}
             >
-              Edit
+              {edit ? "Cancel edit" : "Edit"}
             </Button>
           </div>
         </form>
@@ -168,8 +174,10 @@ export default TransactionDetailsDialog;
 
 const DeleteTransactionButton = ({
   id,
+  refetch,
 }: {
   id: string;
+  refetch: () => void;
 }) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -182,8 +190,12 @@ const DeleteTransactionButton = ({
       type="button"
       onClick={() =>
         startTransition(async () => {
-          await deleteTransactionAction(id);
-          router.refresh();
+          const res = (await deleteTransactionAction(
+            id
+          )) as unknown as { success: string };
+          if (res && res.success) {
+            refetch();
+          }
         })
       }
     >

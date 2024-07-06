@@ -20,13 +20,14 @@ import {
 
 const Transactions = () => {
   const [page, setPage] = useState(1);
-  const [filter, setFilter] = useState("newest");
+  const [datefilter, setDateFilter] = useState("newest");
+  const [valueFilter, setValueFilter] = useState("");
   const user = useAppSelector((state) => state.user.value);
 
-  const { data } = useQuery({
-    queryKey: ["transactions", page, filter],
+  const { data, refetch } = useQuery({
+    queryKey: ["transactions", page, datefilter],
     queryFn: async () =>
-      await fetchTransactions(page, filter),
+      await fetchTransactions(page, datefilter),
   });
 
   let pagination, transactions;
@@ -36,7 +37,9 @@ const Transactions = () => {
     transactions = data.transactions || [];
   }
 
-  if (!transactions) return <TransactionsSkeleton />;
+  const refetchData = () => refetch();
+
+  // if (!transactions) return <TransactionsSkeleton />;
 
   return (
     <>
@@ -67,16 +70,30 @@ const Transactions = () => {
               <IoMdArrowDropright />
             </Button>
           </div>
-          <NewTransactionDialog />
+          <NewTransactionDialog
+            refetch={refetch as () => void}
+          />
         </div>
       </div>
       <hr className="border-b border-zinc-200 mt-4" />
-      <div className="w-full mt-3">
-        <Select onValueChange={(e) => setFilter(e)}>
-          <SelectTrigger className="w-[180px] ml-auto">
+      <div className="w-full mt-3 flex gap-3  justify-end">
+        <Select onValueChange={(e) => setDateFilter(e)}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue
+              placeholder="Filter by value"
+              defaultValue={datefilter}
+            />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="newest">Biggest</SelectItem>
+            <SelectItem value="oldest">Lowest</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select onValueChange={(e) => setDateFilter(e)}>
+          <SelectTrigger className="w-[180px]">
             <SelectValue
               placeholder="Filter by date"
-              defaultValue={filter}
+              defaultValue={datefilter}
             />
           </SelectTrigger>
           <SelectContent>
@@ -92,7 +109,7 @@ const Transactions = () => {
           </span>
 
           <span className="text-zinc-400 text-sm flex-1 text-center">
-            Date
+            Date (mm/dd)
           </span>
 
           <span className="text-zinc-400 text-sm flex-1 text-end pr-">
@@ -104,13 +121,15 @@ const Transactions = () => {
           </span>
         </div>
         <div className="flex-1 w-full mb-2 flex flex-col gap-3 divide-y-2 divide-zinc-300 mt-5">
-          {transactions.length > 0 &&
+          {transactions &&
+            transactions.length > 0 &&
             transactions?.map((transaction, i) => (
               <Fragment key={transaction.transactionId}>
                 <SingleTransaction
                   transaction={transaction}
                   user={user}
                   i={i}
+                  refetch={() => refetch()}
                 />
               </Fragment>
             ))}

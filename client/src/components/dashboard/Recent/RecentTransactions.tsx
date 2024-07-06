@@ -39,7 +39,9 @@ const RecentTransactions = async ({
       </div>
       <div className="flex justify-between items-center mt-4">
         <span className="text-zinc-400 text-sm">User</span>
-        <span className="text-zinc-400 text-sm">Date</span>
+        <span className="text-zinc-400 text-sm pl-3">
+          Date
+        </span>
         <span className="text-zinc-400 text-sm">
           Amount
         </span>

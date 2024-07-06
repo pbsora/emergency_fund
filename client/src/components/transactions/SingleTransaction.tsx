@@ -17,6 +17,7 @@ type Props = {
   transaction: Transaction;
   user: User;
   i: number;
+  refetch: () => void;
 };
 
 const fadeInAnimationVariants = {
@@ -37,6 +38,7 @@ const SingleTransaction = ({
   transaction,
   user,
   i,
+  refetch,
 }: Props) => {
   return (
     <motion.div
@@ -44,7 +46,9 @@ const SingleTransaction = ({
       variants={fadeInAnimationVariants}
       initial="initial"
       animate="animate"
+      viewport={{ once: true }}
       custom={i}
+      key={transaction.transactionId}
     >
       <div className="flex items-center gap-5 w-1/4">
         <Avatar className="size-8">
@@ -72,6 +76,7 @@ const SingleTransaction = ({
       <div className="w-1/4 text-end">
         <TransactionDetailsDialog
           transaction={transaction}
+          refetch={refetch as () => void}
         />
       </div>
     </motion.div>
@@ -81,7 +86,7 @@ export default SingleTransaction;
 
 export const SingleTransactionSkeleton = () => {
   return (
-    <div className="py-3 flex items-center w-full animate-stagger500">
+    <div className="py-3 flex items-center w-full animate-stagger600">
       <div className="flex items-center gap-5 w-1/4">
         <Avatar className="size-8">
           <AvatarFallback>U</AvatarFallback>

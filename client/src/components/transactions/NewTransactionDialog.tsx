@@ -23,17 +23,27 @@ import { format } from "date-fns";
 import { useFormState, useFormStatus } from "react-dom";
 import { newTransactionAction } from "@/actions/transactionActions";
 
-const NewTransactionDialog = () => {
+type Props = {
+  refetch?: () => void;
+};
+
+const NewTransactionDialog = ({ refetch }: Props) => {
   const [Mounted, setMounted] = useState(false);
   const [date, setDate] = useState<Date>();
   const [result, action] = useFormState(
-    newTransactionAction,
+    newTransactionAction.bind(null, date?.toISOString()),
     null
   );
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (result?.success) {
+      refetch?.();
+    }
+  }, [result]);
 
   if (!Mounted) {
     return (
@@ -111,12 +121,6 @@ const NewTransactionDialog = () => {
                 />
               </PopoverContent>
             </Popover>
-            <input
-              type="text"
-              name="date"
-              value={date?.toISOString()}
-              hidden
-            />
           </div>
           {result && result.success ? (
             <p className=" text-sm text-center">

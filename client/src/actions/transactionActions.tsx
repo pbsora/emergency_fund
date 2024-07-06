@@ -24,15 +24,18 @@ const transactionSchema = z.object({
 });
 
 export const newTransactionAction = async (
+  date: string | undefined,
   _: unknown,
   formData: FormData
 ) => {
   try {
+    date && formData.append("date", date as string);
     const { error, data } = transactionSchema.safeParse(
       Object.fromEntries(formData.entries())
     );
 
     if (error) {
+      console.log(error);
       return { message: error.errors[0].message };
     }
 
@@ -63,6 +66,7 @@ export const deleteTransactionAction = async (
 
     revalidatePath("/transactions");
     revalidatePath("/dashboard");
+    return { success: "Transaction deleted successfully!" };
   } catch (error) {
     if (Object.values(error)[0] instanceof AggregateError) {
       return AggregateErrorHelper(error);
@@ -73,10 +77,12 @@ export const deleteTransactionAction = async (
 export const updateTransactionAction = async (
   userId: string,
   transactionId: string,
+  date: string | undefined,
   _: unknown,
   formData: FormData
 ) => {
   try {
+    date && formData.append("date", date as string);
     const { data, error } = transactionSchema.safeParse(
       Object.fromEntries(formData.entries())
     );

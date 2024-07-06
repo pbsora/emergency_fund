@@ -10,7 +10,7 @@ const Config = async () => {
   ).then((res) => res.json());
 
   return (
-    <div className="flex flex-col gap-10 w-full px-3 md:ml-20 pt-10 h-fit lg:h-[100dvh] overflow-y-scroll">
+    <div className="flex flex-col gap-10 w-full px-3 md:ml-10 pt-10 h-fit lg:h-[100dvh] overflow-y-scroll">
       <h1 className="text-3xl font-semibold pl-3 lg:pl-0">
         Settings
       </h1>
