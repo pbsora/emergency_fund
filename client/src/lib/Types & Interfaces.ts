@@ -37,6 +37,7 @@ export type Status = {
 };
 
 export type UserConfig = {
+  id: string;
   monthlyExpenses: number;
   months: number;
 };

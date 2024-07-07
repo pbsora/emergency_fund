@@ -101,21 +101,59 @@ export const updateNameAction = async (
   }
 };
 
+const userConfigSchema = z.object({
+  id: z.string(),
+  months: z.string({
+    required_error: "Number of months is required",
+  }),
+  monthlyExpenses: z
+    .string({
+      required_error: "How much are your monthly expenses",
+    })
+    .transform((val) => val.replace(/[$,]/g, ""))
+    .transform((val) => Number(val))
+    .refine((val) => val > 0, {
+      message: "Expenses can't be less than zero!",
+    })
+    .refine((val) => val < 1_000_000, {
+      message: "Expenses can't be more than one million!",
+    }),
+  userId: z.string({
+    required_error: "User ID is required",
+  }),
+});
+
 export const monthsAction = async (
+  userId: string,
+  id: string,
+  months: number,
   _: unknown,
-  months: number
+  formData: FormData
 ) => {
   try {
-    if (![3, 6, 12].includes(months)) {
+    formData.append("userId", userId);
+    formData.append("id", id);
+    formData.append("months", months.toString());
+
+    const { error, data } = userConfigSchema.safeParse(
+      Object.fromEntries(formData.entries())
+    );
+
+    if (error) {
+      return { message: error.errors[0].message };
+    }
+
+    if (![3, 6, 12].includes(+data.months)) {
       return { message: "Invalid option" };
     }
 
-    const res = await API.patch(`config/months/${months}`);
+    const res = await API.put("config", data);
 
     if (!res.ok) {
       return await ResponseMessageHelper(res);
     }
 
+    revalidatePath("/config");
     return { success: "Updated successfully" };
   } catch (error) {
     if (Object.values(error)[0] instanceof AggregateError) {

@@ -147,7 +147,7 @@ const TransactionDetailsDialog = ({
               {result?.message}
             </p>
           )}
-          <div className="flex gap-3 w-full">
+          <div className="flex flex-row-reverse gap-3 w-full">
             {edit ? (
               <UpdateButton />
             ) : (

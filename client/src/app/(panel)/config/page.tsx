@@ -18,7 +18,7 @@ const Config = async () => {
       <hr className="w-full lg:w-3/4 bg-black" />
       <NameForm />
       <hr className="w-full lg:w-3/4 bg-black" />
-      <MonthsChange months={userConfig.months} />
+      <MonthsChange config={userConfig} />
       <hr className="w-full lg:w-3/4 bg-black" />
     </div>
   );
