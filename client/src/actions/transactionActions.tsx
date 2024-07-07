@@ -15,12 +15,22 @@ import { z } from "zod";
 const transactionSchema = z.object({
   amount: z
     .string()
-    .max(1000000, "Max amount is $1,000,000"),
+    .transform((val) => +val)
+    .refine((val) => val > 0, {
+      message: "Amount can't be less than zero!",
+    })
+    .refine((val) => val < 1_000_000, {
+      message: "Amount can't be more than one million",
+    }),
   description: z
     .string()
     .min(5, "Description is too short")
     .max(100, "Description is too long"),
-  date: z.string(),
+  date: z
+    .string()
+    .refine((val) => new Date(val) < new Date(Date.now()), {
+      message: "Date can't be in the future",
+    }),
 });
 
 export const newTransactionAction = async (
@@ -35,7 +45,6 @@ export const newTransactionAction = async (
     );
 
     if (error) {
-      console.log(error);
       return { message: error.errors[0].message };
     }
 
