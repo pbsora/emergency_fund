@@ -19,9 +19,10 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Calendar } from "../ui/calendar";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { useFormState, useFormStatus } from "react-dom";
 import { newTransactionAction } from "@/actions/transactionActions";
+import { formatCurrency } from "@/utils/formatters";
 
 type Props = {
   refetch?: () => void;
@@ -34,6 +35,8 @@ const NewTransactionDialog = ({ refetch }: Props) => {
     newTransactionAction.bind(null, date?.toISOString()),
     null
   );
+
+  const [amount, setAmount] = useState("");
 
   useEffect(() => {
     setMounted(true);
@@ -77,11 +80,15 @@ const NewTransactionDialog = ({ refetch }: Props) => {
               How much?
             </Label>
             <Input
-              type="number"
+              type="text"
               name="amount"
               inputMode="numeric"
-              placeholder="$1234.6789"
+              placeholder="$"
               pattern="[0-9]+"
+              value={amount}
+              onChange={(e) =>
+                setAmount(formatCurrency(e.target.value))
+              }
             />
           </div>
           <div className="flex flex-col gap-3">

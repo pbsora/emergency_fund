@@ -124,12 +124,14 @@ const Transactions = () => {
           {transactions &&
             transactions.length > 0 &&
             transactions?.map((transaction, i) => (
-              <SingleTransaction
-                transaction={transaction}
-                user={user}
-                i={i}
-                refetch={() => refetch()}
-              />
+              <Fragment key={transaction.transactionId}>
+                <SingleTransaction
+                  transaction={transaction}
+                  user={user}
+                  i={i}
+                  refetch={() => refetch()}
+                />
+              </Fragment>
             ))}
         </div>
       </div>

@@ -48,7 +48,6 @@ const SingleTransaction = ({
       animate="animate"
       viewport={{ once: true }}
       custom={i}
-      key={transaction.transactionId}
     >
       <div className="flex items-center gap-5 w-1/4">
         <Avatar className="size-8">
