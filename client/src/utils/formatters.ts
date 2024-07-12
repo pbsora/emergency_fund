@@ -5,11 +5,7 @@ const CURRENCY_FORMATTER = new Intl.NumberFormat("en-US", {
 });
 
 export function formatCurrency(amount: number | string) {
-  console.log(amount);
-
   if (typeof amount === "string") {
-    if (amount.length === 0) return "";
-
     amount = parseFloat(amount.replace(/[$,]/g, ""));
 
     if (isNaN(amount)) return CURRENCY_FORMATTER.format(0);

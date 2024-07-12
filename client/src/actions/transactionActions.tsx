@@ -15,7 +15,9 @@ import { z } from "zod";
 const transactionSchema = z.object({
   amount: z
     .string()
-    .transform((val) => +val)
+    .transform((val) =>
+      parseFloat(val.replace(/[$,.]/g, ""))
+    )
     .refine((val) => val > 0, {
       message: "Amount can't be less than zero!",
     })

@@ -29,6 +29,7 @@ import {
 } from "@/actions/transactionActions";
 import { useFormState, useFormStatus } from "react-dom";
 import { useAppSelector } from "@/hooks/ReduxHooks";
+import { formatCurrency } from "@/utils/formatters";
 
 type Props = {
   transaction: Transaction;
@@ -48,6 +49,10 @@ const TransactionDetailsDialog = ({
       ? new Date(transaction.date)
       : transaction.date
   );
+  const [amount, setAmount] = useState(
+    formatCurrency(transaction.amount)
+  );
+
   const [edit, setEdit] = useState(false);
 
   const [result, action] = useFormState(
@@ -86,12 +91,13 @@ const TransactionDetailsDialog = ({
           <div className="flex flex-col gap-2">
             <Label>Amount</Label>
             <Input
-              type="number"
+              type="text"
               name="amount"
               inputMode="numeric"
-              placeholder="$1234.6789"
-              pattern="[0-9]+"
-              defaultValue={transaction.amount}
+              value={amount}
+              onChange={(e) =>
+                setAmount(formatCurrency(e.target.value))
+              }
               disabled={!edit}
             />
           </div>
