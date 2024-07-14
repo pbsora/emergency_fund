@@ -41,7 +41,7 @@ namespace backend_tests.Repository
         }
 
         [Fact]
-        public async Task GetTransactionsAsync_NoTransactions_ReturnsEmptyList()
+        public async Task GetTransactionsAsync_NoTransactions_ThrowsException()
         {
 
             // Arrange
@@ -67,24 +67,27 @@ namespace backend_tests.Repository
             var userId = Guid.NewGuid().ToString();
             var transactionParams = new TransactionParams();
 
-            var transaction = new NewTransactionDTO
+            var transaction = new Transaction
             {
                 Amount = 100,
                 Description = "Test",
                 Date = DateTime.Now,
+                UserId = userId
             };
 
-            var transaction2 = new NewTransactionDTO
+            var transaction2 = new Transaction
             {
                 Amount = 100,
                 Description = "Test",
                 Date = DateTime.Now,
-
+                UserId = userId
             };
+
+            await context.Transactions.AddRangeAsync(transaction, transaction2);
+            await context.SaveChangesAsync();
 
             // Act
-            await transactionRepository.CreateTransactionAsync(transaction, userId);
-            await transactionRepository.CreateTransactionAsync(transaction2, userId);
+
 
             var result = await transactionRepository.GetTransactionsAsync(userId, transactionParams);
 
@@ -187,7 +190,6 @@ namespace backend_tests.Repository
 
             createdTransaction.Should().NotBeNull();
             createdTransaction.Should().BeOfType<Transaction>();
-            createdTransaction.Should().NotBeNull();
             createdTransaction.Should().BeEquivalentTo(transaction, options => options.ExcludingMissingMembers());
             createdTransaction!.UserId.Should().Be(userId);
         }

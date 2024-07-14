@@ -40,7 +40,7 @@ namespace server.Controllers
 
                 if (userId == null)
                 {
-                    return StatusCode(403, "Unauthorized");
+                    return Unauthorized();
                 }
 
                 var transactions = await _repository.GetTransactionsAsync(
@@ -50,7 +50,7 @@ namespace server.Controllers
 
                 if (transactions == null)
                 {
-                    return StatusCode(404, new { message = "No transactions found" });
+                    return NotFound(new { message = "No transactions found" });
                 }
 
                 return PaginatedTransactions(transactions);
@@ -62,15 +62,24 @@ namespace server.Controllers
         }
 
         [HttpGet("{transactionId}", Name = "GetSingle"),]
-        public async Task<IActionResult> GetSingle(string transactionId)
+        public async Task<ActionResult<TransactionDTO>> GetSingle(string transactionId)
         {
             try
             {
+                var userId = User
+                    .Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
+                    ?.Value;
+
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
+
                 Guid.TryParse(transactionId.ToString(), out Guid id);
 
                 if (id == Guid.Empty)
                 {
-                    return StatusCode(400, "Invalid transaction id");
+                    return BadRequest("Invalid transaction ID");
                 }
 
                 var transaction = await _repository.SingleTransactionAsync(
@@ -79,7 +88,7 @@ namespace server.Controllers
 
                 if (transaction == null)
                 {
-                    return StatusCode(404, "Transaction not found");
+                    return NotFound("Transaction not found");
                 }
 
                 return Ok(transaction);
@@ -131,7 +140,7 @@ namespace server.Controllers
         {
             try
             {
-                string? userId = User.FindFirst(ClaimTypes.Name)?.Value;
+                string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
                 if (string.IsNullOrEmpty(userId))
                     return Unauthorized(new { message = "Not logged in" });
@@ -147,7 +156,7 @@ namespace server.Controllers
 
                 if (result == null)
                 {
-                    return StatusCode(404, "Transaction not found");
+                    return NotFound("Transaction not found");
                 }
 
                 return Ok(result);
@@ -169,20 +178,16 @@ namespace server.Controllers
 
                 if (userId == null)
                 {
-                    return StatusCode(403, "Unauthorized");
+                    return Unauthorized();
                 }
 
                 var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-
-                var transaction = await _repository.SingleTransactionAsync(
-                    Guid.Parse(transactionId)
-                );
 
                 var result = await _repository.DeleteTransactionAsync(transactionId);
 
                 if (!result)
                 {
-                    return StatusCode(404, "Transaction not found");
+                    return NotFound("Transaction not found");
                 }
 
                 return Ok("Deleted successfully");
@@ -217,12 +222,12 @@ namespace server.Controllers
         {
             if (e is InvalidOperationException || e is ArgumentNullException)
             {
-                return StatusCode(400, new { message = e.Message });
+                return BadRequest(new { message = e.Message });
             }
 
             if (e is KeyNotFoundException)
             {
-                return StatusCode(404, new { message = e.Message });
+                return NotFound(new { message = e.Message });
             }
 
             return StatusCode(500, new { message = "Something went wrong!" });

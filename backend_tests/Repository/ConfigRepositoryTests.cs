@@ -63,8 +63,6 @@ namespace backend_tests.Repository
             result.Months.Should().Be(createConfigDTO.Months);
             result.Should().BeEquivalentTo(createConfigDTO);
             result.Should().BeOfType<GetConfigDTO>();
-
-
         }
 
         [Fact]
@@ -75,16 +73,10 @@ namespace backend_tests.Repository
             using var context = await GetDbContext();
             var configRepository = new ConfigRepository(context, _mapper);
 
-            var createConfigDTO = new CreateConfigDTO
-            {
-                UserId = Guid.NewGuid().ToString(),
-                MonthlyExpenses = 1000,
-                Months = 3,
-            };
-
+            string userId = Guid.NewGuid().ToString();
             // Act
 
-            Func<Task> action = async () => await configRepository.GetConfig(createConfigDTO.UserId);
+            Func<Task> action = async () => await configRepository.GetConfig(userId);
 
             // Assert
 
@@ -183,6 +175,9 @@ namespace backend_tests.Repository
 
             result.Should().BeOfType<ConfigDTO>();
             result.Should().NotBeNull();
+            result.UserId.Should().Be(updateConfigDTO.UserId);
+            result.MonthlyExpenses.Should().Be(updateConfigDTO.MonthlyExpenses);
+            result.Months.Should().Be(updateConfigDTO.Months);
 
         }
 

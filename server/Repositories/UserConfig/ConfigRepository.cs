@@ -23,7 +23,7 @@ namespace server.Repositories.UserConfig
             Config? config = await _context.Config.FirstOrDefaultAsync(c => c.UserId == userId);
 
             if (config == null)
-                throw new ArgumentNullException("Configuration not found!");
+                throw new KeyNotFoundException("Configuration not found!");
 
             return _mapper.Map<GetConfigDTO>(config);
         }
@@ -35,7 +35,7 @@ namespace server.Repositories.UserConfig
             );
 
             if (configExists)
-                return false;
+                throw new InvalidOperationException("Configuration already exists!");
 
             Config config = _mapper.Map<Config>(configDTO);
             await _context.Config.AddAsync(config);
