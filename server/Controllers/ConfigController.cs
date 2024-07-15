@@ -1,15 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.PortableExecutable;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using server.Data;
 using server.DTOs.UserConfig;
 using server.Model;
 using server.Repositories.UserConfig;
@@ -37,10 +30,10 @@ namespace server.Controllers
         {
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
                 if (String.IsNullOrEmpty(userId))
-                    return BadRequest(new { message = "Not logged in!" });
+                    return Unauthorized(new { message = "Not logged in!" });
 
                 GetConfigDTO config = await _repository.GetConfig(userId);
 
@@ -60,6 +53,11 @@ namespace server.Controllers
         {
             try
             {
+                string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (String.IsNullOrEmpty(userId))
+                    return Unauthorized(new { message = "Not logged in!" });
+
                 if (!ModelState.IsValid)
                     return BadRequest(
                         new { message = ModelState.Values.First().Errors.First().ErrorMessage }
@@ -91,19 +89,19 @@ namespace server.Controllers
                 string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
                 if (string.IsNullOrEmpty(userId))
-                    return BadRequest(new { message = "Not logged in!" });
+                    return Unauthorized(new { message = "Not logged in!" });
 
                 if (!ModelState.IsValid)
                     return BadRequest(
                         new { message = ModelState.Values.First().Errors.First().ErrorMessage }
                     );
 
-                /* GetConfigDTO oldConfig = await _repository.GetConfig(userId);
+                GetConfigDTO oldConfig = await _repository.GetConfig(userId);
 
                 if (oldConfig == null || userId != oldConfig.UserId!.ToString())
                 {
-                    return BadRequest(new { message = "Configuration error!" });
-                } */
+                    return BadRequest(new { message = "Configuration does not exist!" });
+                }
 
                 await _repository.UpdateConfig(updateConfigDTO);
 
@@ -125,7 +123,7 @@ namespace server.Controllers
 
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (String.IsNullOrEmpty(userId))
-                    return BadRequest(new { message = "Not logged in!" });
+                    return Unauthorized(new { message = "Not logged in!" });
 
                 var user = await _userManager.FindByIdAsync(userId);
                 if (user == null)
@@ -203,7 +201,7 @@ namespace server.Controllers
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
                 if (String.IsNullOrEmpty(userId))
-                    return BadRequest(new { message = "Not logged in!" });
+                    return Unauthorized(new { message = "Not logged in!" });
 
                 var user = await _userManager.FindByIdAsync(userId);
 
@@ -233,7 +231,7 @@ namespace server.Controllers
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
                 if (String.IsNullOrEmpty(userId))
-                    return BadRequest(new { message = "Not logged in!" });
+                    return Unauthorized(new { message = "Not logged in!" });
 
                 var res = await _repository.UpdateMonths(months, userId);
 
@@ -252,12 +250,12 @@ namespace server.Controllers
         {
             if (e is InvalidOperationException || e is ArgumentNullException)
             {
-                return StatusCode(400, new { message = e.Message });
+                return BadRequest(new { message = e.Message });
             }
 
             if (e is KeyNotFoundException)
             {
-                return StatusCode(404, new { message = e.Message });
+                return NotFound(new { message = e.Message });
             }
 
             return StatusCode(500, new { message = "Something went wrong!" });

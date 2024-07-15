@@ -111,6 +111,13 @@ namespace backend_tests.Controllers
             returnedTransactions!.Count.Should().Be(2);
             returnedTransactions[0].Amount.Should().Be(100);
             returnedTransactions[1].Amount.Should().Be(200);
+
+            var responseHeaders = controller.HttpContext.Response.Headers;
+            responseHeaders.Should().ContainKey("X-Pagination");
+            var metadata = responseHeaders["X-Pagination"].ToString();
+            metadata.Should().Contain("\"Count\":2");
+            metadata.Should().Contain("\"PageSize\":10");
+            metadata.Should().Contain("\"PageCount\":1");
         }
 
 

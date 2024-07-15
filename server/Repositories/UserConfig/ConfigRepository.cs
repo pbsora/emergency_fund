@@ -35,7 +35,9 @@ namespace server.Repositories.UserConfig
             );
 
             if (configExists)
-                throw new InvalidOperationException("Configuration already exists!");
+                throw new InvalidOperationException(
+                    "Configuration already exists, please update it instead!"
+                );
 
             Config config = _mapper.Map<Config>(configDTO);
             await _context.Config.AddAsync(config);
