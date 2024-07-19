@@ -80,18 +80,6 @@ const Transactions = () => {
         <Select onValueChange={(e) => setDateFilter(e)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue
-              placeholder="Filter by value"
-              defaultValue={datefilter}
-            />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="newest">Biggest</SelectItem>
-            <SelectItem value="oldest">Lowest</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select onValueChange={(e) => setDateFilter(e)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue
               placeholder="Filter by date"
               defaultValue={datefilter}
             />

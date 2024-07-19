@@ -6,6 +6,7 @@ import "react-circular-progressbar/dist/styles.css";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { DateTime } from "ts-luxon";
 import OverviewProgressBar from "./OverviewProgressBar";
+import { Parse } from "@/lib/helpers";
 
 const wait = async (ms: number) =>
   new Promise((res) => setTimeout(res, ms));
@@ -27,7 +28,7 @@ const Overview = async () => {
   await wait(1000);
   let stats: Status = await API.get(
     "transactions/status"
-  ).then((res) => res.json());
+  ).then((res) => Parse(res));
 
   if (!stats.count) {
     stats = defaultStats;
@@ -56,10 +57,6 @@ const Overview = async () => {
             <span className="text-2xl font-semibold">
               {formatCurrency(stats.total)}
             </span>
-            <div className="bg-green-200 rounded-sm text-green-600 text-sm py-1 px-2 flex items-center gap-2">
-              <FaArrowTrendUp />
-              <span>20%</span>
-            </div>
           </div>
         </div>
         <div className="flex flex-col pb-4 border-b dark:border-zinc-400">
@@ -70,10 +67,6 @@ const Overview = async () => {
             <span className="text-2xl font-semibold">
               {stats.count}
             </span>
-            <div className="bg-green-200 rounded-sm text-green-600 text-sm py-1 px-2 flex items-center gap-2">
-              <FaArrowTrendUp />
-              <span>20%</span>
-            </div>
           </div>
         </div>
         <div className="flex flex-col ">
@@ -90,10 +83,6 @@ const Overview = async () => {
                   ).toFormat("MM/dd")
                 : "N/A"}
             </span>
-            <div className="bg-green-200 rounded-sm text-green-600 text-sm py-1 px-2 flex items-center gap-2">
-              <FaArrowTrendUp />
-              <span>20%</span>
-            </div>
           </div>
         </div>
         <OverviewProgressBar value={percentage} />
@@ -115,10 +104,6 @@ export function OverviewSkeleton() {
           </h2>
           <div className="flex items-end justify-between">
             <span className=" bg-zinc-200/90 h-7 rounded-xl animate-pulse w-40"></span>
-            <div className="bg-green-200 rounded-sm text-green-600 text-sm py-1 px-2 flex items-center gap-2">
-              <FaArrowTrendUp />
-              <span>20%</span>
-            </div>
           </div>
         </div>
         <div className="flex flex-col pb-4 border-b">
@@ -127,10 +112,6 @@ export function OverviewSkeleton() {
           </h2>
           <div className="flex items-end justify-between">
             <span className=" bg-zinc-200/90 h-7 rounded-xl animate-pulse w-40"></span>
-            <div className="bg-green-200 rounded-sm text-green-600 text-sm py-1 px-2 flex items-center gap-2">
-              <FaArrowTrendUp />
-              <span>20%</span>
-            </div>
           </div>
         </div>
         <div className="flex flex-col">
@@ -139,10 +120,6 @@ export function OverviewSkeleton() {
           </h2>
           <div className="flex items-end justify-between">
             <span className=" bg-zinc-200/90 h-7 rounded-xl animate-pulse w-40"></span>
-            <div className="bg-green-200 rounded-sm text-green-600 text-sm py-1 px-2 flex items-center gap-2">
-              <FaArrowTrendUp />
-              <span>20%</span>
-            </div>
           </div>
         </div>
         <OverviewProgressBar value={0} />

@@ -34,19 +34,27 @@ class FetchWrapper {
       method: "get",
       credentials: "include",
       headers: {
-        Cookie: `token=${cookies().get("token")?.value}`,
+        Cookie: `token=${
+          cookies().get("token")?.value
+        }; refresh-token=${
+          cookies().get("refresh-token")?.value
+        }`,
       },
     });
   }
 
-  post(url: string, data: unknown) {
+  post(url: string, data?: unknown) {
     url = url.charAt(0) === "/" ? url.slice(1) : url;
     return fetch(this.baseURL + url, {
       method: "post",
       credentials: "include",
       headers: {
         "Content-Type": "application/json; charset=UTF-8",
-        Cookie: `token=${cookies().get("token")?.value}`,
+        Cookie: `token=${
+          cookies().get("token")?.value
+        }; refresh-token=${
+          cookies().get("refresh-token")?.value
+        }`,
       },
       body: JSON.stringify(data),
     });

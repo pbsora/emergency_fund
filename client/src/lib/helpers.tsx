@@ -38,3 +38,15 @@ export const ResponseMessageHelper = async (
 export const Capitalize = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
+
+export const Parse = async (res: Response) => {
+  const contentType = res.headers.get("Content-Type");
+  if (
+    contentType &&
+    contentType.includes("application/json")
+  ) {
+    return await res.json();
+  } else {
+    return await res.text();
+  }
+};

@@ -1,6 +1,7 @@
 import ImageChange from "@/components/config/ImageChange";
 import MonthsChange from "@/components/config/MonthsChange";
 import NameForm from "@/components/config/NameForm";
+import RefreshToken from "@/components/config/RefreshToken";
 import { UserConfig } from "@/lib/Types & Interfaces";
 import API from "@/utils/api";
 
@@ -20,6 +21,7 @@ const Config = async () => {
       <hr className="w-full lg:w-3/4 bg-black" />
       <MonthsChange config={userConfig} />
       <hr className="w-full lg:w-3/4 bg-black" />
+      <RefreshToken />
     </div>
   );
 };

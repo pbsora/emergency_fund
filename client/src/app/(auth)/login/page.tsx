@@ -2,7 +2,7 @@ import LoginForm from "@/components/auth/LoginForm";
 
 const Login = () => {
   return (
-    <div className="min-h-screen w-screen bg-zinc-900">
+    <div className="min-h-screen w-screen dark:bg-zinc-900">
       <LoginForm />
     </div>
   );

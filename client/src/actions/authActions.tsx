@@ -1,10 +1,12 @@
 "use server";
 
 import { CustomAggregateError } from "@/lib/Types & Interfaces";
-import { AggregateErrorHelper } from "@/lib/helpers";
+import { AggregateErrorHelper, Parse } from "@/lib/helpers";
 import API from "@/utils/api";
+import { red } from "@mui/material/colors";
 import { AxiosError } from "axios";
-import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -105,10 +107,22 @@ export const loginAction = async (
     const token = serverCookies[0]
       .split(";")[0]
       .split("=")[1];
+    const refreshToken = decodeURIComponent(
+      serverCookies[1].split(";")[0].split("=")[1]
+    );
 
     cookies().set({
       name: "token",
       value: token,
+      httpOnly: true,
+      path: "/",
+      sameSite: "none",
+      secure: true,
+    });
+
+    cookies().set({
+      name: "refresh-token",
+      value: refreshToken,
       httpOnly: true,
       path: "/",
       sameSite: "none",
@@ -140,14 +154,29 @@ const registerSchema = z.object({
     .min(2, "Name must be at least 2 characters long"),
   username: z
     .string()
-    .min(3, "Username must be at least 3 characters long"),
-  email: z.string().email(),
+    .transform((val) => val.trim())
+    .refine(
+      (val) => val.length >= 3,
+      "Username must be at least 3 characters long"
+    ),
+  email: z
+    .string()
+    .email()
+    .transform((value) => value.trim()),
   password: z
     .string()
-    .min(3, "Password must be at least 3 characters long"),
+    .transform((val) => val.trim())
+    .refine(
+      (val) => val.length >= 6,
+      "Password must be at least 6 characters long"
+    ),
   confirmPassword: z
     .string()
-    .min(3, "Password must be at least 3 characters long"),
+    .transform((val) => val.trim())
+    .refine(
+      (val) => val.length >= 6,
+      "Password must match"
+    ),
 });
 
 export const registerAction = async (
@@ -204,3 +233,54 @@ export const registerAction = async (
     );
   }
 };
+
+export const logoutAction = async () => {
+  const res = await API.post("auth/logout");
+
+  if (!res.ok) {
+    return { message: "Something went wrong" };
+  }
+
+  cookies().delete("token");
+  cookies().delete("refresh-token");
+  redirect("/login");
+};
+
+export async function isAuthenticated() {
+  const data = await API.get("auth/isAuthenticated").then(
+    (res) => Parse(res)
+  );
+
+  return data;
+}
+
+export async function refreshToken() {
+  const data = await API.post("auth/refresh");
+
+  if (data.ok) {
+    const serverCookies = data.headers.getSetCookie();
+    const token = serverCookies[0]
+      .split(";")[0]
+      .split("=")[1];
+    console.log(serverCookies);
+    const refreshToken = serverCookies[1]
+      .split(";")[0]
+      .split("=")[1];
+
+    cookies().set({
+      name: "token",
+      value: token,
+      httpOnly: true,
+    });
+    cookies().set({
+      name: "refresh-token",
+      value: refreshToken,
+      httpOnly: true,
+    });
+
+    console.log(token, refreshToken);
+
+    return true;
+  }
+  return false;
+}

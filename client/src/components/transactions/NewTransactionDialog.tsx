@@ -84,7 +84,6 @@ const NewTransactionDialog = ({ refetch }: Props) => {
               name="amount"
               inputMode="numeric"
               placeholder="$"
-              pattern="[$0-9]+"
               value={amount}
               onChange={(e) =>
                 setAmount(formatCurrency(e.target.value))

@@ -9,6 +9,9 @@ import { MdDashboard } from "react-icons/md";
 import { FaGear } from "react-icons/fa6";
 import { TbTransactionDollar } from "react-icons/tb";
 import { HiLogout } from "react-icons/hi";
+import { logoutAction } from "@/actions/authActions";
+import { useFormState, useFormStatus } from "react-dom";
+import { Oval } from "react-loader-spinner";
 
 const Sidebar = ({ user }: { user: User }) => {
   const dispatch = useAppDispatch();
@@ -42,13 +45,34 @@ const Sidebar = ({ user }: { user: User }) => {
           <p>Settings</p>
         </SidebarLink>
         <div className="mt-auto mb-10">
-          <SidebarLink href={"/config"}>
-            <HiLogout className="text-xl rotate-180" />
-            <p className="text-lg">Logout</p>
-          </SidebarLink>
+          <LogoutButton />
         </div>
       </div>
     </div>
   );
 };
 export default Sidebar;
+
+const LogoutButton = () => {
+  const { pending } = useFormStatus();
+  const [_, action] = useFormState(logoutAction, null);
+
+  return (
+    <form
+      className={` w-full py-4 flex justify-center items-center hover:text-yellow-400 gap-3 text-base lg:text-lg font-light relative before:absolute before:left-0 before:h-[25px] before:w-[2px] before:top-[50%] before:-translate-y-[50%] transition-colors duration-300`}
+      action={action}
+    >
+      <button
+        className="flex justify-start w-40 items-center gap-2 lg:gap-4"
+        disabled={pending}
+      >
+        {pending ? (
+          <Oval width={25} color="#FFC107" />
+        ) : (
+          <HiLogout className="text-xl rotate-180" />
+        )}
+        <p className="text-lg">Logout</p>
+      </button>
+    </form>
+  );
+};
