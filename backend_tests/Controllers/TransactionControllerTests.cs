@@ -1,4 +1,5 @@
-﻿using backend_tests.Config;
+﻿using System.Security.Claims;
+using backend_tests.Config;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +10,6 @@ using server.DTOs.Transactions;
 using server.Model;
 using server.Pagination.QueryParams;
 using server.Repositories.Transactions;
-using System.Security.Claims;
 using X.PagedList;
 
 namespace backend_tests.Controllers
@@ -54,15 +54,11 @@ namespace backend_tests.Controllers
         public TransactionController GetController(string userId)
         {
             var controllerContext = GetControllerContext(userId);
-            return new TransactionController(
-                               _transactionRepository.Object,
-                                              _userManager.Object
-                                                         )
+            return new TransactionController(_transactionRepository.Object, _userManager.Object)
             {
                 ControllerContext = controllerContext
             };
         }
-
 
         [Fact]
         public async Task GetTransactionsAsync_ValidRequest_ReturnsTransactions()
@@ -94,7 +90,8 @@ namespace backend_tests.Controllers
 
             var pagedList = new StaticPagedList<TransactionDTO>(transactions, 1, 10, 2);
 
-            _transactionRepository.Setup(x => x.GetTransactionsAsync(userId.ToString(), transactionParams))
+            _transactionRepository
+                .Setup(x => x.GetTransactionsAsync(userId.ToString(), transactionParams))
                 .ReturnsAsync(pagedList);
 
             // Act
@@ -120,7 +117,6 @@ namespace backend_tests.Controllers
             metadata.Should().Contain("\"PageCount\":1");
         }
 
-
         [Fact]
         public async Task GetTransactionsAsync_NoTransactionsFound_ReturnsNotFound()
         {
@@ -131,7 +127,8 @@ namespace backend_tests.Controllers
 
             var transactionParams = new TransactionParams();
 
-            _transactionRepository.Setup(x => x.GetTransactionsAsync(userId.ToString(), transactionParams))
+            _transactionRepository
+                .Setup(x => x.GetTransactionsAsync(userId.ToString(), transactionParams))
                 .ReturnsAsync((IPagedList<TransactionDTO>)null!);
 
             // Act
@@ -141,11 +138,13 @@ namespace backend_tests.Controllers
             // Assert
 
             var notFoundResult = result.Result as NotFoundObjectResult;
-            notFoundResult.Should().BeOfType<NotFoundObjectResult>().Which.StatusCode.Should().Be(404);
+            notFoundResult
+                .Should()
+                .BeOfType<NotFoundObjectResult>()
+                .Which.StatusCode.Should()
+                .Be(404);
             notFoundResult.Should().NotBeNull();
             notFoundResult!.StatusCode.Should().Be(404);
-
-
         }
 
         [Fact]
@@ -168,8 +167,6 @@ namespace backend_tests.Controllers
             _transactionRepository
                 .Setup(x => x.SingleTransactionAsync(transactionId))
                 .ReturnsAsync(transaction);
-
-
 
             // Act
 
@@ -227,9 +224,6 @@ namespace backend_tests.Controllers
                 Description = "Test transaction"
             };
 
-
-
-
             _transactionRepository
                 .Setup(x => x.CreateTransactionAsync(transactionDTO, userId.ToString()))
                 .ReturnsAsync(transaction);
@@ -251,15 +245,13 @@ namespace backend_tests.Controllers
             returnedTransaction.Should().BeEquivalentTo(transaction);
         }
 
-
         [Fact]
         public async Task PostAsync_InvalidTransaction_ReturnsBadRequest()
         {
             // Arrange
             var userId = Guid.NewGuid();
             var controller = GetController(userId.ToString());
-            controller.ModelState.AddModelError
-                ("Test", "Test model error");
+            controller.ModelState.AddModelError("Test", "Test model error");
 
             // Act
 
@@ -268,7 +260,11 @@ namespace backend_tests.Controllers
             // Assert
 
             var badRequestResult = result as BadRequestObjectResult;
-            badRequestResult.Should().BeOfType<BadRequestObjectResult>().Which.StatusCode.Should().Be(400);
+            badRequestResult
+                .Should()
+                .BeOfType<BadRequestObjectResult>()
+                .Which.StatusCode.Should()
+                .Be(400);
         }
 
         [Fact]
@@ -289,9 +285,6 @@ namespace backend_tests.Controllers
             _transactionRepository
                 .Setup(x => x.UpdateTransaction(transaction))
                 .ReturnsAsync(transaction);
-
-
-
 
             // Act
 
@@ -327,8 +320,11 @@ namespace backend_tests.Controllers
             // Assert
 
             var badRequestResult = result as BadRequestObjectResult;
-            badRequestResult.Should().BeOfType<BadRequestObjectResult>().Which.StatusCode.Should().Be(400);
-
+            badRequestResult
+                .Should()
+                .BeOfType<BadRequestObjectResult>()
+                .Which.StatusCode.Should()
+                .Be(400);
         }
 
         [Fact]
@@ -356,9 +352,12 @@ namespace backend_tests.Controllers
             // Assert
 
             var notFoundResult = result as NotFoundObjectResult;
-            notFoundResult.Should().BeOfType<NotFoundObjectResult>().Which.StatusCode.Should().Be(404);
+            notFoundResult
+                .Should()
+                .BeOfType<NotFoundObjectResult>()
+                .Which.StatusCode.Should()
+                .Be(404);
         }
-
 
         [Fact]
         public async Task DeleteAsync_ValidId_ReturnsOk()
@@ -367,8 +366,8 @@ namespace backend_tests.Controllers
             var userId = Guid.NewGuid();
             var controller = GetController(userId.ToString());
 
-
-            _transactionRepository.Setup(x => x.DeleteTransactionAsync(It.IsAny<string>()))
+            _transactionRepository
+                .Setup(x => x.DeleteTransactionAsync(It.IsAny<string>()))
                 .ReturnsAsync(true);
 
             // Act
@@ -379,9 +378,7 @@ namespace backend_tests.Controllers
 
 
             result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
-
         }
-
 
         [Fact]
         public async void DeleteAsync_InexistentTransaction_ReturnsNotFound()
@@ -390,7 +387,8 @@ namespace backend_tests.Controllers
             var userId = Guid.NewGuid();
             var controller = GetController(userId.ToString());
 
-            _transactionRepository.Setup(x => x.DeleteTransactionAsync(It.IsAny<string>()))
+            _transactionRepository
+                .Setup(x => x.DeleteTransactionAsync(It.IsAny<string>()))
                 .ThrowsAsync(new KeyNotFoundException());
 
             // Act
@@ -400,7 +398,6 @@ namespace backend_tests.Controllers
             // Assert
 
             result.Should().BeOfType<NotFoundObjectResult>().Which.StatusCode.Should().Be(404);
-
         }
     }
 }

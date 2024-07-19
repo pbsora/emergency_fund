@@ -8,14 +8,11 @@ using server.Pagination.QueryParams;
 using server.Repositories.Transactions;
 using X.PagedList;
 
-
 namespace backend_tests.Repository
 {
     public class TransactionRepositoryTests
     {
-
         private readonly IMapper _mapper;
-
 
         public TransactionRepositoryTests()
         {
@@ -25,9 +22,7 @@ namespace backend_tests.Repository
             });
             IMapper mapper = mappingConfig.CreateMapper();
             _mapper = mapper;
-
         }
-
 
         private async Task<AppDbContext> GetDbContext()
         {
@@ -43,7 +38,6 @@ namespace backend_tests.Repository
         [Fact]
         public async Task GetTransactionsAsync_NoTransactions_ThrowsException()
         {
-
             // Arrange
             using var context = await GetDbContext();
             var transactionRepository = new TransactionRepository(context, _mapper);
@@ -51,12 +45,12 @@ namespace backend_tests.Repository
             var transactionParams = new TransactionParams();
 
             // Act
-            Func<Task> action = async () => await transactionRepository.GetTransactionsAsync(userId, transactionParams);
+            Func<Task> action = async () =>
+                await transactionRepository.GetTransactionsAsync(userId, transactionParams);
 
             // Assert
             await action.Should().ThrowAsync<KeyNotFoundException>();
         }
-
 
         [Fact]
         public async Task GetTransactionsAsync_MultipleTransactions_ReturnsIPagedList()
@@ -89,15 +83,16 @@ namespace backend_tests.Repository
             // Act
 
 
-            var result = await transactionRepository.GetTransactionsAsync(userId, transactionParams);
+            var result = await transactionRepository.GetTransactionsAsync(
+                userId,
+                transactionParams
+            );
 
             // Assert
             result.Should().NotBeNull();
             result.Should().BeAssignableTo<IPagedList<TransactionDTO>>();
             result.Count.Should().Be(2);
-
         }
-
 
         [Fact]
         public async Task SingleTransactionAsync_ValidTransactionId_ReturnsTransaction()
@@ -116,17 +111,24 @@ namespace backend_tests.Repository
 
             string userId = "1";
 
-            var createdTransaction = await transactionRepository.CreateTransactionAsync(transactionDTO, userId);
+            var createdTransaction = await transactionRepository.CreateTransactionAsync(
+                transactionDTO,
+                userId
+            );
 
             // Act
 
-            var transaction = await transactionRepository.SingleTransactionAsync(createdTransaction.TransactionId);
+            var transaction = await transactionRepository.SingleTransactionAsync(
+                createdTransaction.TransactionId
+            );
 
             // Assert
 
             transaction.Should().NotBeNull();
             transaction.Should().BeOfType<TransactionDTO>();
-            transaction.Should().BeEquivalentTo(transactionDTO, options => options.ExcludingMissingMembers());
+            transaction
+                .Should()
+                .BeEquivalentTo(transactionDTO, options => options.ExcludingMissingMembers());
         }
 
         [Fact]
@@ -139,7 +141,8 @@ namespace backend_tests.Repository
 
             // Act
 
-            Func<Task> action = async () => await transactionRepository.SingleTransactionAsync(Guid.Empty);
+            Func<Task> action = async () =>
+                await transactionRepository.SingleTransactionAsync(Guid.Empty);
 
             // Assert
 
@@ -156,7 +159,8 @@ namespace backend_tests.Repository
 
             // Act
 
-            Func<Task> action = async () => await transactionRepository.SingleTransactionAsync(Guid.NewGuid());
+            Func<Task> action = async () =>
+                await transactionRepository.SingleTransactionAsync(Guid.NewGuid());
 
             // Assert
 
@@ -184,13 +188,17 @@ namespace backend_tests.Repository
 
             // Act
 
-            var createdTransaction = context.Transactions.FirstOrDefault(t => t.TransactionId == result.TransactionId);
+            var createdTransaction = context.Transactions.FirstOrDefault(t =>
+                t.TransactionId == result.TransactionId
+            );
 
             // Assert
 
             createdTransaction.Should().NotBeNull();
             createdTransaction.Should().BeOfType<Transaction>();
-            createdTransaction.Should().BeEquivalentTo(transaction, options => options.ExcludingMissingMembers());
+            createdTransaction
+                .Should()
+                .BeEquivalentTo(transaction, options => options.ExcludingMissingMembers());
             createdTransaction!.UserId.Should().Be(userId);
         }
 
@@ -201,7 +209,6 @@ namespace backend_tests.Repository
             using var context = await GetDbContext();
             var transactionRepository = new TransactionRepository(context, _mapper);
 
-
             NewTransactionDTO transaction = new NewTransactionDTO
             {
                 Amount = 100,
@@ -211,7 +218,10 @@ namespace backend_tests.Repository
 
             string userId = "1";
 
-            var createdTransaction = await transactionRepository.CreateTransactionAsync(transaction, userId);
+            var createdTransaction = await transactionRepository.CreateTransactionAsync(
+                transaction,
+                userId
+            );
 
             var updatedTransaction = new TransactionDTO
             {
@@ -228,14 +238,11 @@ namespace backend_tests.Repository
 
             var result = await transactionRepository.UpdateTransaction(updatedTransaction);
 
-
             // Assert
 
             result.Amount.Should().Be(updatedTransaction.Amount);
             result.Description.Should().Be(updatedTransaction.Description);
             result.Date.Should().Be(updatedTransaction.Date);
-
-
         }
 
         [Fact]
@@ -244,7 +251,6 @@ namespace backend_tests.Repository
             // Arrange
             using var context = await GetDbContext();
             var transactionRepository = new TransactionRepository(context, _mapper);
-
 
             NewTransactionDTO transaction = new NewTransactionDTO
             {
@@ -255,17 +261,20 @@ namespace backend_tests.Repository
 
             string userId = "1";
 
-            var createdTransaction = await transactionRepository.CreateTransactionAsync(transaction, userId);
+            var createdTransaction = await transactionRepository.CreateTransactionAsync(
+                transaction,
+                userId
+            );
 
             // Act
 
-            var result = await transactionRepository.DeleteTransactionAsync(createdTransaction.TransactionId.ToString());
-
+            var result = await transactionRepository.DeleteTransactionAsync(
+                createdTransaction.TransactionId.ToString()
+            );
 
             // Assert
 
             result.Should().BeTrue();
-
         }
 
         [Fact]
@@ -277,12 +286,12 @@ namespace backend_tests.Repository
 
             // Act
 
-            Func<Task> action = async () => await transactionRepository.DeleteTransactionAsync(Guid.Empty.ToString());
+            Func<Task> action = async () =>
+                await transactionRepository.DeleteTransactionAsync(Guid.Empty.ToString());
 
             // Assert
 
             await action.Should().ThrowAsync<KeyNotFoundException>();
         }
-
     }
 }

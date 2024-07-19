@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using server.Data;
@@ -11,9 +12,11 @@ using server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240717113829_AddRefreshTokenClassToUser")]
+    partial class AddRefreshTokenClassToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,13 +53,13 @@ namespace server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d549768b-db32-43e3-ae25-f1382506784c",
+                            Id = "ddee3381-5ae9-474c-8977-a275f7c5025e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "96262a22-f83f-4096-a78c-899a27be47f2",
+                            Id = "61516175-dd8f-47a3-b4e0-39e510b8f131",
                             Name = "User",
                             NormalizedName = "USER"
                         });

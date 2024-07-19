@@ -1,4 +1,5 @@
-﻿using backend_tests.Config;
+﻿using System.Security.Claims;
+using backend_tests.Config;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -8,13 +9,11 @@ using server.Controllers;
 using server.DTOs.UserConfig;
 using server.Model;
 using server.Repositories.UserConfig;
-using System.Security.Claims;
 
 namespace backend_tests.Controllers
 {
     public class ConfigControllerTests
     {
-
         private readonly Mock<IConfigRepository> _configRepository;
         private readonly Mock<UserManager<ApplicationUser>> _userManager;
 
@@ -24,8 +23,18 @@ namespace backend_tests.Controllers
 
             var users = new List<ApplicationUser>
             {
-                new ApplicationUser { Id = "1", UserName = "user1", Name = "Sora" },
-                new ApplicationUser { Id = "2", UserName = "user2", Name = "Sora" }
+                new ApplicationUser
+                {
+                    Id = "1",
+                    UserName = "user1",
+                    Name = "Sora"
+                },
+                new ApplicationUser
+                {
+                    Id = "2",
+                    UserName = "user2",
+                    Name = "Sora"
+                }
             };
 
             _userManager = UserManagerMock.CreateMockUserManager<ApplicationUser>(users);
@@ -53,16 +62,11 @@ namespace backend_tests.Controllers
         public ConfigController GetController(string userId)
         {
             var controllerContext = GetControllerContext(userId);
-            return new ConfigController(
-                               _configRepository.Object,
-                                              _userManager.Object
-                                                         )
+            return new ConfigController(_configRepository.Object, _userManager.Object)
             {
                 ControllerContext = controllerContext
             };
         }
-
-
 
         [Fact]
         public async Task GetAsync_ValidRequest_ReturnsConfig()
@@ -94,7 +98,6 @@ namespace backend_tests.Controllers
             configResult.Should().BeEquivalentTo(config);
         }
 
-
         [Fact]
         public async Task GetAsync_InvalidRequest_ReturnsNotFound()
         {
@@ -102,7 +105,9 @@ namespace backend_tests.Controllers
             var userId = Guid.NewGuid();
             var controller = GetController(userId.ToString());
 
-            _configRepository.Setup(x => x.GetConfig(userId.ToString())).ThrowsAsync(new KeyNotFoundException());
+            _configRepository
+                .Setup(x => x.GetConfig(userId.ToString()))
+                .ThrowsAsync(new KeyNotFoundException());
 
             // Act
 
@@ -111,9 +116,12 @@ namespace backend_tests.Controllers
             // Assert
 
             var notFoundResult = result.Result as NotFoundObjectResult;
-            notFoundResult.Should().BeOfType<NotFoundObjectResult>().Which.StatusCode.Should().Be(404);
+            notFoundResult
+                .Should()
+                .BeOfType<NotFoundObjectResult>()
+                .Which.StatusCode.Should()
+                .Be(404);
         }
-
 
         [Fact]
         public async Task GetAsync_InvalidUserId_ReturnsUnauthorized()
@@ -129,10 +137,12 @@ namespace backend_tests.Controllers
             // Assert
 
             var unauthorizedResult = result.Result as UnauthorizedObjectResult;
-            unauthorizedResult.Should().BeOfType<UnauthorizedObjectResult>().Which.StatusCode.Should().Be(401);
-
+            unauthorizedResult
+                .Should()
+                .BeOfType<UnauthorizedObjectResult>()
+                .Which.StatusCode.Should()
+                .Be(401);
         }
-
 
         [Fact]
         public async Task PostAsync_ValidRequest_ReturnsOk()
@@ -158,9 +168,7 @@ namespace backend_tests.Controllers
 
             var okResult = result.Result as OkObjectResult;
             okResult.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
-
         }
-
 
         [Fact]
         public async Task PostAsync_InvalidRequest_ReturnsBadRequest()
@@ -178,9 +186,12 @@ namespace backend_tests.Controllers
             // Assert
 
             var badRequestResult = result.Result as BadRequestObjectResult;
-            badRequestResult.Should().BeOfType<BadRequestObjectResult>().Which.StatusCode.Should().Be(400);
+            badRequestResult
+                .Should()
+                .BeOfType<BadRequestObjectResult>()
+                .Which.StatusCode.Should()
+                .Be(400);
         }
-
 
         [Fact]
         public async Task PostAsync_ConfigExists_ReturnsBadRequest()
@@ -196,7 +207,9 @@ namespace backend_tests.Controllers
                 MonthlyExpenses = 1000,
             };
 
-            _configRepository.Setup(x => x.CreateConfig(config)).ThrowsAsync(new InvalidOperationException());
+            _configRepository
+                .Setup(x => x.CreateConfig(config))
+                .ThrowsAsync(new InvalidOperationException());
 
             // Act
 
@@ -205,9 +218,12 @@ namespace backend_tests.Controllers
             // Assert
 
             var badRequestResult = result.Result as BadRequestObjectResult;
-            badRequestResult.Should().BeOfType<BadRequestObjectResult>().Which.StatusCode.Should().Be(400);
+            badRequestResult
+                .Should()
+                .BeOfType<BadRequestObjectResult>()
+                .Which.StatusCode.Should()
+                .Be(400);
         }
-
 
         [Fact]
         public async Task PostAsync_InvalidUserId_ReturnsUnathorized()
@@ -223,10 +239,12 @@ namespace backend_tests.Controllers
             // Assert
 
             var unauthorizedResult = result.Result as UnauthorizedObjectResult;
-            unauthorizedResult.Should().BeOfType<UnauthorizedObjectResult>().Which.StatusCode.Should().Be(401);
-
+            unauthorizedResult
+                .Should()
+                .BeOfType<UnauthorizedObjectResult>()
+                .Which.StatusCode.Should()
+                .Be(401);
         }
-
 
         [Fact]
         public async Task PutAsync_ValidRequest_ReturnsOk()
@@ -263,7 +281,6 @@ namespace backend_tests.Controllers
             okResult.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
         }
 
-
         [Fact]
         public async Task PutAsync_InexistentConfig_ReturnsBadRequest()
         {
@@ -271,7 +288,9 @@ namespace backend_tests.Controllers
             var userId = Guid.NewGuid();
             var controller = GetController(userId.ToString());
 
-            _configRepository.Setup(x => x.GetConfig(userId.ToString())).ThrowsAsync(new InvalidOperationException());
+            _configRepository
+                .Setup(x => x.UpdateConfig(It.IsAny<ConfigDTO>()))
+                .ThrowsAsync(new InvalidOperationException());
 
             // Act
 
@@ -280,10 +299,12 @@ namespace backend_tests.Controllers
             // Assert
 
             var badRequestResult = result.Result as BadRequestObjectResult;
-            badRequestResult.Should().BeOfType<BadRequestObjectResult>().Which.StatusCode.Should().Be(400);
-
+            badRequestResult
+                .Should()
+                .BeOfType<BadRequestObjectResult>()
+                .Which.StatusCode.Should()
+                .Be(400);
         }
-
 
         [Fact]
         public async Task PutAsync_InvalidModelState_ReturnsBadRequest()
@@ -301,10 +322,12 @@ namespace backend_tests.Controllers
             // Assert
 
             var badRequestResult = result.Result as BadRequestObjectResult;
-            badRequestResult.Should().BeOfType<BadRequestObjectResult>().Which.StatusCode.Should().Be(400);
-
+            badRequestResult
+                .Should()
+                .BeOfType<BadRequestObjectResult>()
+                .Which.StatusCode.Should()
+                .Be(400);
         }
-
 
         [Fact]
         public async Task PutAsync_InvalidUserId_ReturnsUnauthorized()
@@ -320,9 +343,12 @@ namespace backend_tests.Controllers
             // Assert
 
             var unauthorizedResult = result.Result as UnauthorizedObjectResult;
-            unauthorizedResult.Should().BeOfType<UnauthorizedObjectResult>().Which.StatusCode.Should().Be(401);
+            unauthorizedResult
+                .Should()
+                .BeOfType<UnauthorizedObjectResult>()
+                .Which.StatusCode.Should()
+                .Be(401);
         }
-
 
         [Fact]
         public async Task ChangeName_ValidName_ReturnsOk()
@@ -339,8 +365,6 @@ namespace backend_tests.Controllers
 
             var okResult = result as OkObjectResult;
             okResult.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
-
         }
-
     }
 }

@@ -92,6 +92,8 @@ namespace server.Services
                 out SecurityToken securityToken
             );
 
+            var isToken = securityToken is JwtSecurityToken;
+
             if (
                 securityToken is not JwtSecurityToken jwtSecurityToken
                 || !jwtSecurityToken.Header.Alg.Equals(

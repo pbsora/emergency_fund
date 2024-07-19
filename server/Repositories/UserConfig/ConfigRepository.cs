@@ -48,6 +48,15 @@ namespace server.Repositories.UserConfig
 
         public async Task<ConfigDTO> UpdateConfig(ConfigDTO config)
         {
+            var oldConfig = await _context.Config.FirstOrDefaultAsync(c =>
+                c.UserId == config.UserId
+            );
+
+            if (oldConfig == null || oldConfig.UserId != config.UserId)
+                throw new KeyNotFoundException("Configuration not found!");
+
+            _context.Entry(oldConfig).State = EntityState.Detached;
+
             var configToUpdate = _mapper.Map<Config>(config);
             _context.Entry(configToUpdate).State = EntityState.Modified;
             await _context.SaveChangesAsync();

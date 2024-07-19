@@ -20,6 +20,7 @@ namespace server.Data
             builder.Entity<IdentityRole>().HasData(roles);
 
             builder.Entity<ApplicationUser>().OwnsOne(u => u.ProfilePicture);
+            builder.Entity<ApplicationUser>().OwnsOne(u => u.RefreshToken);
 
             base.OnModelCreating(builder);
         }

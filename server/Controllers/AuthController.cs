@@ -19,29 +19,28 @@ namespace server.Controllers
         public readonly UserManager<ApplicationUser> _userManager;
         public readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ITokenService _tokenService;
-        private readonly AppDbContext _context;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ITokenService tokenService,
-            AppDbContext context
+            ITokenService tokenService
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
-            _context = context;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO registerDTO)
+        public async Task<ActionResult<object>> RegisterAsync([FromBody] RegisterDTO registerDTO)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(
+                        new { message = ModelState.Values.First().Errors.First().ErrorMessage }
+                    );
                 }
 
                 if (registerDTO.Password != registerDTO.ConfirmPassword)
@@ -75,7 +74,7 @@ namespace server.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginDTO loginDTO)
+        public async Task<ActionResult<object>> LoginAsync([FromBody] LoginDTO loginDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new { message = "Invalid login request" });
@@ -83,12 +82,7 @@ namespace server.Controllers
             if (string.IsNullOrEmpty(loginDTO.Password) || string.IsNullOrEmpty(loginDTO.Username))
                 return BadRequest(new { message = "One or more fields are empty" });
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(u =>
-                u.UserName == loginDTO.Username.ToLower()
-            );
-
-            if (string.IsNullOrEmpty(loginDTO.Password))
-                return BadRequest(new { message = "Password is empty" });
+            var user = await _userManager.FindByNameAsync(loginDTO.Username);
 
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDTO.Password))
                 return Unauthorized(new { message = "Invalid username or password" });
@@ -97,9 +91,9 @@ namespace server.Controllers
 
             //Generate Token and Refresh Token
             var token = _tokenService.CreateToken(user, userRoles.ToList());
-            var refreshToken = _tokenService.GenerateRefreshToken();
-            user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(60 * 24);
-            user.RefreshToken = refreshToken;
+            var refreshToken = Uri.EscapeDataString(_tokenService.GenerateRefreshToken());
+            user.RefreshToken.ExpiryTime = DateTime.Now.AddMinutes(60 * 24);
+            user.RefreshToken.Token = refreshToken;
 
             await _userManager.UpdateAsync(user);
 
@@ -127,39 +121,62 @@ namespace server.Controllers
 
             var user = await _userManager.FindByNameAsync(username!);
 
-            if (
-                user == null
-                || user.RefreshToken != refreshToken
-                || user.RefreshTokenExpiryTime <= DateTime.Now
-            )
+            if (user == null || user.RefreshToken.ExpiryTime < DateTime.Now)
             {
                 return BadRequest(new { message = "Invalid access token/refresh token" });
             }
             var userRoles = await _userManager.GetRolesAsync(user);
 
             var newAccessToken = _tokenService.CreateToken(user, userRoles.ToList());
-            var newRefreshToken = _tokenService.GenerateRefreshToken();
+            var newRefreshToken = Uri.EscapeDataString(_tokenService.GenerateRefreshToken());
 
-            user.RefreshToken = newRefreshToken;
+            user.RefreshToken.Token = newRefreshToken;
 
             await _userManager.UpdateAsync(user);
 
             SaveToken("token", newAccessToken);
             SaveToken("refresh-token", newRefreshToken);
 
-            return Ok();
+            return Ok(new { message = "Login successful" });
+        }
+
+        [HttpPost("logout")]
+        public async Task<ActionResult<object>> Logout()
+        {
+            try
+            {
+                var userId = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (user == null)
+                    return BadRequest(new { message = "User not found" });
+
+                user.RefreshToken.Token = null;
+                user.RefreshToken.ExpiryTime = DateTime.Now;
+                await _userManager.UpdateAsync(user);
+
+                SaveToken("token", "");
+
+                return Ok(new { message = "Logout successful" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpGet("isAuthenticated")]
         public ActionResult isAuthenticated()
         {
-            Request.Cookies.TryGetValue("token", out string? token);
-            return Ok(User.Identity!.IsAuthenticated);
+            var isAuthenticated = User.Identity!.IsAuthenticated;
+
+            return Ok(isAuthenticated);
         }
 
         [Authorize]
         [HttpGet("info")]
-        public async Task<ActionResult<Object>> GetUserInfo()
+        public async Task<ActionResult<UserInfoDTO>> GetUserInfo()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -167,15 +184,15 @@ namespace server.Controllers
 
             if (user == null)
             {
-                return BadRequest(new { message = "User not found" });
+                return Unauthorized(new { message = "User not found" });
             }
 
-            var userInfo = new
+            UserInfoDTO userInfo = new UserInfoDTO
             {
-                userId,
-                name = user.Name,
-                username = User.FindFirst(ClaimTypes.GivenName)?.Value,
+                UserId = userId,
+                Name = user.Name,
                 Email = User.FindFirst(ClaimTypes.Email)?.Value,
+                Username = User.FindFirst(ClaimTypes.GivenName)?.Value,
                 ProfilePicture = user.ProfilePicture.Url
             };
 

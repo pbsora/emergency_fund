@@ -19,16 +19,16 @@ namespace server.Model
                     "https://res.cloudinary.com/dhkaqwnyz/image/upload/v1719234863/emergency_fund/wjaus0t4qmmjmv7msajv.png",
                 PublicId = "Default"
             };
-        public string? RefreshToken { get; set; }
-        public DateTime RefreshTokenExpiryTime { get; set; }
+        public RefreshToken RefreshToken { get; set; } = new RefreshToken();
     }
 
     [Owned]
     public class ProfilePicture
     {
-        public string? Url { get; set; }
+        public string? Url { get; set; } =
+            "https://res.cloudinary.com/dhkaqwnyz/image/upload/v1719234863/emergency_fund/wjaus0t4qmmjmv7msajv.png";
 
-        public string? PublicId { get; set; }
+        public string? PublicId { get; set; } = "Default";
     }
 
     [Owned]

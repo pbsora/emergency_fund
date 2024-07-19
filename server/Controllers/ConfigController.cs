@@ -96,12 +96,12 @@ namespace server.Controllers
                         new { message = ModelState.Values.First().Errors.First().ErrorMessage }
                     );
 
-                GetConfigDTO oldConfig = await _repository.GetConfig(userId);
+                // GetConfigDTO oldConfig = await _repository.GetConfig(userId);
 
-                if (oldConfig == null || userId != oldConfig.UserId!.ToString())
-                {
-                    return BadRequest(new { message = "Configuration does not exist!" });
-                }
+                // if (oldConfig == null || userId != oldConfig.UserId!.ToString())
+                // {
+                //     return BadRequest(new { message = "Configuration does not exist!" });
+                // }
 
                 await _repository.UpdateConfig(updateConfigDTO);
 
