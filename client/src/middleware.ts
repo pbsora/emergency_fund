@@ -70,8 +70,33 @@ async function refreshToken(req: NextRequest) {
   return false;
 }
 
+const configExists = async () => {
+  const config = await fetch(
+    `${process.env.CLIENT_URL}config`,
+    {
+      method: "GET",
+      headers: {
+        ...headers(),
+        Cookie: `token=${cookies().get("token")?.value}`,
+      },
+      credentials: "include",
+    }
+  );
+
+  if (!config.ok && config.status === 404) {
+    return false;
+  }
+  return true;
+};
+
 export default async function middleware(req: NextRequest) {
   let data = await isAuthenticated(req);
+
+  if (!(await configExists())) {
+    return NextResponse.redirect(
+      new URL("/first-login", req.url)
+    );
+  }
 
   // if (!data) {
   //   const newToken = await refreshToken(req);

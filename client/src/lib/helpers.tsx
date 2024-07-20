@@ -27,11 +27,11 @@ export const ResponseMessageHelper = async (
     const message = await res.json();
     return (
       { message: message.message } ||
-      "Failed to upload image"
+      "Failed to make request"
     );
   } else {
     const message = await res.text();
-    return { message } || "Failed to upload image";
+    return { message } || "Failed to make request";
   }
 };
 

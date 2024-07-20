@@ -278,8 +278,6 @@ export async function refreshToken() {
       httpOnly: true,
     });
 
-    console.log(token, refreshToken);
-
     return true;
   }
   return false;

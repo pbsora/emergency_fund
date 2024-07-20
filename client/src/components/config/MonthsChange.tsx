@@ -8,6 +8,7 @@ import { Input } from "../ui/input";
 import { formatCurrency } from "@/utils/formatters";
 import { useAppSelector } from "@/hooks/ReduxHooks";
 import { UserConfig } from "@/lib/Types & Interfaces";
+import { Oval } from "react-loader-spinner";
 
 type Props = {
   config: UserConfig;
@@ -107,7 +108,11 @@ const SubmitButton = () => {
 
   return (
     <Button disabled={pending}>
-      {pending ? "Changing" : "Update"}
+      {pending ? (
+        <Oval color="#fff" height={20} width={20} />
+      ) : (
+        "Update"
+      )}
     </Button>
   );
 };

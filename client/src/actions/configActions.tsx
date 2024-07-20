@@ -6,6 +6,7 @@ import {
 } from "@/lib/helpers";
 import API from "@/utils/api";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const MAX_FILE_SIZE = 5000000;
@@ -156,6 +157,70 @@ export const monthsAction = async (
     revalidatePath("/config");
     return { success: "Updated successfully" };
   } catch (error) {
+    if (Object.values(error)[0] instanceof AggregateError) {
+      return AggregateErrorHelper(error);
+    }
+    return { message: error.message };
+  }
+};
+
+const newConfigSchema = z.object({
+  months: z
+    .string({
+      required_error: "Number of months is required",
+    })
+    .transform((val) => Number.parseInt(val)),
+  monthlyExpenses: z
+    .string({
+      required_error: "How much are your monthly expenses",
+    })
+    .transform((val) => val.replace(/[$,]/g, ""))
+    .transform((val) => Number(val))
+    .refine((val) => val > 0, {
+      message: "Expenses can't be less than zero!",
+    })
+    .refine((val) => val < 1_000_000, {
+      message: "Expenses can't be more than one million!",
+    }),
+  userId: z.string({
+    required_error:
+      "Error getting user ID, please reload the page",
+  }),
+});
+
+export const newConfigAction = async (
+  month: string,
+  expenses: string,
+  userId: string,
+  _: unknown
+) => {
+  try {
+    const formData = new FormData();
+    formData.append("userId", userId);
+    formData.append("months", month.toString());
+    formData.append("monthlyExpenses", expenses);
+
+    const { data, error } =
+      await newConfigSchema.safeParseAsync(
+        Object.fromEntries(formData.entries())
+      );
+
+    if (error) {
+      return { message: error.errors[0].message };
+    }
+
+    const res = await API.post("config", data);
+
+    if (!res.ok) {
+      return await ResponseMessageHelper(res);
+    }
+
+    redirect("/dashboard");
+  } catch (error) {
+    if (error.message === "NEXT_REDIRECT") {
+      redirect("/login");
+    }
+
     if (Object.values(error)[0] instanceof AggregateError) {
       return AggregateErrorHelper(error);
     }

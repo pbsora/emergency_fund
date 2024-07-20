@@ -29,22 +29,22 @@ const RegisterForm = () => {
         action={action}
         className="w-full flex flex-col items-center justify-center gap-6 "
       >
-        <InputWithIcon name="name">
+        <InputWithIcon name="name" variant="text">
           <CiUser
             size={20}
-            className="absolute right-3 z-10 bg-white size-6 text-zinc-500 "
+            className="absolute right-3 z-10 bg-white size-6 text-zinc-500 dark:bg-transparent"
           />
         </InputWithIcon>
-        <InputWithIcon name="username">
+        <InputWithIcon name="username" variant="text">
           <CiUser
             size={20}
-            className="absolute right-3 z-10 bg-white size-6 text-zinc-500 "
+            className="absolute right-3 z-10 bg-white size-6 text-zinc-500 dark:bg-transparent"
           />
         </InputWithIcon>
-        <InputWithIcon name="email">
+        <InputWithIcon name="email" variant="email">
           <MdEmail
             size={20}
-            className="absolute right-3 z-10 bg-white size-6 text-zinc-500 "
+            className="absolute right-3 z-10 bg-white size-6 text-zinc-500 dark:bg-transparent"
           />
         </InputWithIcon>
         <div className="flex w-full">

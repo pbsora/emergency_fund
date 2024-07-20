@@ -20,27 +20,27 @@ const LoginForm = () => {
           size={40}
           className="text-blue-500"
         />
-        <h2 className="font-semibold text-2xl text-zinc-900">
+        <h2 className="font-semibold text-2xl text-zinc-900 dark:text-zinc-300">
           Welcome!
         </h2>
         <h3 className="text-base text-zinc-400">
-          Sign in to your accont
+          Sign in to your account
         </h3>
       </div>
       <form
         action={action}
         className="w-full flex flex-col items-center justify-center gap-6"
       >
-        <InputWithIcon name="username">
+        <InputWithIcon name="username" variant="text">
           <CiUser
             size={20}
-            className="absolute right-3 z-10 bg-white size-6 text-zinc-500 "
+            className="absolute right-3 z-10 bg-white dark:bg-transparent size-6 text-zinc-500 "
           />
         </InputWithIcon>
-        <InputWithIcon name="password">
+        <InputWithIcon name="password" variant="password">
           <RiLockPasswordFill
             size={20}
-            className="absolute right-3 z-10 bg-white text-zinc-500 size-6"
+            className="absolute right-3 z-10 bg-white dark:bg-transparent text-zinc-500 size-6"
           />
         </InputWithIcon>
         {error && (
@@ -57,7 +57,7 @@ const LoginForm = () => {
               href={"/register"}
               className="text-blue-700 hover:underline underline-offset-2"
             >
-              Log-in instead
+              Register
             </Link>
           </p>
         </div>
