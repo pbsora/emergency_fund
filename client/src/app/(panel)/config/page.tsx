@@ -20,8 +20,6 @@ const Config = async () => {
       <NameForm />
       <hr className="w-full lg:w-3/4 bg-black" />
       <MonthsChange config={userConfig} />
-      <hr className="w-full lg:w-3/4 bg-black" />
-      <RefreshToken />
     </div>
   );
 };

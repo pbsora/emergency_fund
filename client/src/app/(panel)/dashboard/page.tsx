@@ -9,7 +9,7 @@ import { Suspense } from "react";
 
 const Dashboard = async () => {
   return (
-    <main className="flex flex-col md:flex-row w-full text-zinc-800 dark:text-white lg:max-h-screen overflow-hidden">
+    <main className="flex flex-col md:flex-row w-full text-zinc-800 dark:text-white lg:max-h-screen ">
       <Suspense fallback={<OverviewSkeleton />}>
         <Overview />
       </Suspense>

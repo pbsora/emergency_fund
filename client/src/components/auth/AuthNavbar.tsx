@@ -8,23 +8,20 @@ const AuthNavbar = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="w-full h-16 shadow-md fixed flex justify-between px-10 items-center">
-      <div className="flex items-center gap-6">
+    <nav className="w-full h-16 shadow-md fixed flex justify-between px-10 items-center bg-zinc-900">
+      <Link href={"/"} className="flex items-center gap-6">
         <img
-          src={"/costs_logo.png"}
+          src={"/logo.png"}
           alt="logo"
-          className="size-10"
+          className="w-36"
         />
-        <Link href={"/"} className="font-semibold text-xl">
-          Costs
-        </Link>
-      </div>
+      </Link>
       {pathname === "/register" ? (
-        <Button>
+        <Button className="bg-zinc-200 text-black">
           <Link href={"/login"}>Log-in</Link>
         </Button>
       ) : (
-        <Button>
+        <Button className="bg-zinc-200 text-black">
           <Link href={"/register"}>Sign-up</Link>
         </Button>
       )}

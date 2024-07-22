@@ -24,11 +24,10 @@ const Sidebar = ({ user }: { user: User }) => {
     <div className="h-screen min-w-[20%] hidden bg-zinc-900  text-white lg:flex flex-col">
       <div className="flex justify-center items-center gap-4 mt-10">
         <img
-          src={"/costs_logo.png"}
+          src={"/logo.png"}
           alt="logo"
-          className="size-10"
+          className="w-36"
         />
-        <h2 className="text-xl bold">Costs</h2>
       </div>
       <div className="flex flex-col mt-10 flex-1">
         <SidebarLink href={"/dashboard"}>

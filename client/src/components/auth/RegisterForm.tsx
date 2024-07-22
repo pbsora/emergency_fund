@@ -19,8 +19,8 @@ const RegisterForm = () => {
 
   return (
     <div className="w-full md:w-7/12 lg:w-4/12 2xl:w-3/12 h-screen m-auto flex flex-col items-center justify-center container gap-10">
-      <div className="flex flex-col items-center gap-4 ">
-        <FaUserCircle size={50} className="text-blue-500" />
+      <div className="flex flex-col items-center gap-2 mt-4">
+        <FaUserCircle size={40} className="text-blue-500" />
         <h1 className="text-2xl font-semibold">
           Create your account!
         </h1>
@@ -47,18 +47,18 @@ const RegisterForm = () => {
             className="absolute right-3 z-10 bg-white size-6 text-zinc-500 dark:bg-transparent"
           />
         </InputWithIcon>
-        <div className="flex w-full">
-          <Input
+        <div className="flex w-full gap-2 pt-2">
+          <input
             type="password"
             name="password"
             placeholder="Password"
-            className="focus-visible:ring-0 focus-visible:outline-none"
+            className="py-2 px-2 flex-1 border-b border-zinc-400 focus:outline-none focus:border-blue-500 bg-transparent w-5/12"
           />
-          <Input
+          <input
             type="password"
             name="confirmPassword"
             placeholder="Confirm Password"
-            className="focus-visible:ring-0 focus-visible:outline-none"
+            className="py-2 px-2 flex-1 border-b border-zinc-400 focus:outline-none focus:border-blue-500 bg-transparent w-5/12"
           />
         </div>
 

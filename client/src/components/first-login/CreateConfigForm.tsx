@@ -30,7 +30,7 @@ const CreateConfigForm = ({
 
   return (
     <div className="container flex justify-center items-center w-screen h-screen">
-      <div className="w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12 flex flex-col gap-12">
+      <div className="w-12/12 md:w-8/12 lg:w-6/12 xl:w-4/12 flex flex-col gap-12">
         <div className="flex flex-col gap-6">
           <h1 className="text-4xl text-center font-semibold">
             Welcome!

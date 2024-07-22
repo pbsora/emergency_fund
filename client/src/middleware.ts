@@ -90,36 +90,40 @@ const configExists = async () => {
 };
 
 export default async function middleware(req: NextRequest) {
-  let data = await isAuthenticated(req);
+  try {
+    let data = await isAuthenticated(req);
 
-  if (!(await configExists())) {
-    return NextResponse.redirect(
-      new URL("/first-login", req.url)
-    );
-  }
-
-  // if (!data) {
-  //   const newToken = await refreshToken(req);
-  //   if (newToken) {
-  //     data = await isAuthenticated(req);
-  //   }
-  // }
-
-  if (
-    req.url.includes("login") ||
-    req.url.includes("register")
-  ) {
-    if (data) {
+    if (!(await configExists())) {
       return NextResponse.redirect(
-        new URL("/dashboard", req.url)
+        new URL("/first-login", req.url)
       );
     }
-  } else {
-    if (!data) {
-      return NextResponse.redirect(
-        new URL("/login", req.url)
-      );
+
+    // if (!data) {
+    //   const newToken = await refreshToken(req);
+    //   if (newToken) {
+    //     data = await isAuthenticated(req);
+    //   }
+    // }
+
+    if (
+      req.url.includes("login") ||
+      req.url.includes("register")
+    ) {
+      if (data) {
+        return NextResponse.redirect(
+          new URL("/dashboard", req.url)
+        );
+      }
+    } else {
+      if (!data) {
+        return NextResponse.redirect(
+          new URL("/login", req.url)
+        );
+      }
     }
+  } catch (error) {
+    return NextResponse.redirect(new URL("/", req.url));
   }
 }
 
