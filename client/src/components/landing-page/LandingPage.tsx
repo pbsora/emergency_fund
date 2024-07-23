@@ -1,10 +1,12 @@
+import About from "./About";
 import Hero from "./Hero";
 
 const LandingPage = () => {
   return (
-    <section className="">
+    <>
       <Hero />
-    </section>
+      <About />
+    </>
   );
 };
 export default LandingPage;
