@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const LandingPageNavbar = () => {
   return (
-    <nav className="w-full h-20 flex justify-between px-20 items-center">
+    <nav className="w-full h-20 flex justify-between px-3 md:px-20 items-center">
       <div>
         <img src="/logo.png" alt="logo" className="w-36" />
       </div>

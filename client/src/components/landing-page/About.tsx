@@ -1,35 +1,65 @@
-import { FaArrowRightLong } from "react-icons/fa6";
-
 const About = () => {
   return (
-    <section className="w-full min-h-screen h-screen bg-slate-50">
-      <div className="container w-10/12 m-auto h-full flex flex-col justify-center gap-40">
-        <div className="space-y-4 rounded-2xl w-full py-20 px-20 relative before:absolute before:w-[5px] before:h-2/4 before:bg-yellow-400 before:top-[50%] before:translate-y-[-50%] before:left-0 before:rounded-xl">
-          <h2 className="text-lg font-semibold text-zinc-600">
-            Why do you need an emergency fund?
-          </h2>
-          <p className="text-xl leading-loose">
-            According to a recent survey, 56% of U.S. adults
-            lack the emergency fund to handle a $1,00
-            unexpected expense and one-third (35%) said they
-            would have to borrow the money somehow to pay it
+    <section className="w-full min-h-screen bg-slate-50 overflow-hidden px-6 lg:px-36 flex flex-col gap-5">
+      <div className="flex flex-col gap-6 py-10 lg:flex-row lg:mt-20">
+        <h2 className="text-xl lg:text-3xl font-bold text-zinc-700 lg:w-5/12">
+          What is an emergency fund?
+        </h2>
+        <div className="lg:w-7/12 flex flex-col gap-5">
+          <p className="text-sm lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
+            An emergency fund is a stash of money set aside
+            to cover the financial surprises life throws
+            your way.
           </p>
-          <a
-            href="https://www.foxbusiness.com/economy/most-americans-cannot-afford-1000-emergency-expense"
-            target="_blank"
-            className="flex items-center gap-4 text-2xl hover:text-yellow-500 duration-200 w-fit"
-          >
-            Read more
-            <FaArrowRightLong />
-          </a>
+          <p className="text-sm lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
+            These unexpected events can be stressful and
+            costly. For example, you may need to replace
+            your car's transmission, or you may need to
+            cover the cost of a hospital stay or you might
+            lose your job. An emergency fund can help you
+            cover these unexpected expenses and avoid going
+            into debt.
+          </p>
         </div>
-        <div>
-          <h2>Why do you need an emergency fund?</h2>
-          <p>
-            According to a recent survey, 56% of U.S. adults
-            lack the emergency fund to handle a $1,00
-            unexpected expense and one-third (35%) said they
-            would have to borrow the money somehow to pay it
+      </div>
+      <hr className="border-b border-zinc-300" />
+      <div className="flex flex-col gap-6 py-10 lg:flex-row lg:mt-10">
+        <h2 className="text-xl lg:text-3xl font-bold text-zinc-700 lg:w-5/12">
+          Why do you need one?
+        </h2>
+        <div className="lg:w-7/12 flex flex-col gap-5">
+          <p className="text-sm lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
+            According to a{" "}
+            <a
+              href="https://www.foxbusiness.com/economy/most-americans-cannot-afford-1000-emergency-expense"
+              target="_blank"
+              className="text-blue-500 hover:underline underline-offset-4 duration-200"
+            >
+              recent survey
+            </a>
+            , 56% of U.S. adults lack the emergency fund to
+            handle a $1,000 unexpected expense and one-third
+            (35%) said they would have to borrow the money
+            somehow to pay it.
+          </p>
+          <p className="text-sm lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
+            An emergency fund allows you to not be shaken up
+            by life, remain calm and face the problem
+            without losing your marbles.
+          </p>
+          <p className="text-sm lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
+            You probably know someone that went through
+            something like this: they lost their job, had to
+            pay for a medical emergency, or had to fix their
+            car. But they didn't have an emergency fund, so
+            they had to swallow their pride and ask family
+            or friends for help. Or worse, they had to take
+            a loan. That't how the spiral of debt and stress
+            starts.
+          </p>
+          <p className="text-sm lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
+            But with an emergency fund, you can avoid that.
+            Life will continue as usual.
           </p>
         </div>
       </div>
