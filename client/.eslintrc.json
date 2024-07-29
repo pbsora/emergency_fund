@@ -2,7 +2,7 @@
   "extends": "next/core-web-vitals",
   "no-restricted-imports": "off",
   "rules": {
-        "no-console": "error"
+        "no-console": [ "error", { "allow": [""]} ]
     },
 "@typescript-eslint/no-restricted-imports": [
   "warn",

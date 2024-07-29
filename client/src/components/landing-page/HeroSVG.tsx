@@ -5,7 +5,7 @@ const HeroSVG = () => {
       data-name="Layer 1"
       viewBox="0 0 822.03371 595.29136"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-      className="size-[22rem] md:size-[30rem] absolute -top-16 right-[50%] translate-x-[50%] lg:-top-10 lg:right-64 "
+      className="m-auto lg:m-0 size-[22rem] md:size-[30rem] lg:size-[32rem] 2xl:size-[40rem] lg:absolute lg:-bottom-10 lg:right-36 2xl:right-48 lg:z-10"
     >
       <path
         d="M883.8498,159.09659v221.92c-.67-.68-1.33-1.36-2-2.04q-.6141-.62445-1.23262-1.24728A242.55886,242.55886,0,0,0,669.8297,309.33386C642.31535,313.77622,616.46106,320.58059,601,331c-116.27782,78.36114-248.2102,3.68655-285.1502-17.19339-.67-.37006-1.34-.75-2-1.14v-153.57a7,7,0,0,1,7-7h556A7,7,0,0,1,883.8498,159.09659Z"
