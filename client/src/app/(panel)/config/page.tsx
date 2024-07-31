@@ -16,9 +16,9 @@ const Config = async () => {
         Settings
       </h1>
       <ImageChange />
-      <hr className="w-full lg:w-3/4 bg-black" />
+      <hr className="w-full lg:w-3/4 bg-zinc-400" />
       <NameForm />
-      <hr className="w-full lg:w-3/4 bg-black" />
+      <hr className="w-full lg:w-3/4 bg-zinc-400" />
       <MonthsChange config={userConfig} />
     </div>
   );

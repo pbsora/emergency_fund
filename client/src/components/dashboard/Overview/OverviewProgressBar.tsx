@@ -13,7 +13,7 @@ const OverviewProgressBar = ({
 }) => {
   return (
     <div className="flex-1 mb-2 m-auto w-full flex items-center justify-center">
-      <div className="w-8/12 visible dark:hidde">
+      <div className="w-8/12 visible dark:hidden">
         <CircularProgressbar
           value={value}
           text={`${value}%`}

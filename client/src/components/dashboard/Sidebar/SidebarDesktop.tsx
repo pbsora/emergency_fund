@@ -32,16 +32,16 @@ const Sidebar = ({ user }: { user: User }) => {
       <div className="flex flex-col mt-10 flex-1">
         <SidebarLink href={"/dashboard"}>
           <MdDashboard className="text-lg lg:text-xl" />
-          <p>Dashboard</p>
+          <span>Dashboard</span>
         </SidebarLink>
         <SidebarLink href={"/transactions"}>
           <TbTransactionDollar className="text-lg lg:text-xl" />
-          <p>Transactions</p>
+          <span>Savings</span>
         </SidebarLink>
 
         <SidebarLink href={"/config"}>
           <FaGear size={22} />
-          <p>Settings</p>
+          <span>Settings</span>
         </SidebarLink>
         <div className="mt-auto mb-10">
           <LogoutButton />

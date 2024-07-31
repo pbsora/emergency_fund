@@ -45,7 +45,7 @@ const Transactions = () => {
     <>
       <div className="w-full flex items-center justify-between">
         <h1 className="text-3xl font-semibold text-zinc-800 dark:text-zinc-200">
-          Transactions
+          Savings
         </h1>
         <div className="flex items-center gap-3">
           <div className="flex items-center">
@@ -90,14 +90,14 @@ const Transactions = () => {
           </SelectContent>
         </Select>
       </div>
-      <div className="mt-5 flex flex-col">
+      <div className="mt-10 lg:mt-5 flex flex-col">
         <div className="flex justify-between">
           <span className="text-zinc-400 text-sm flex-1">
             User
           </span>
 
           <span className="text-zinc-400 text-sm flex-1 text-center">
-            Date (mm/dd)
+            Date (mm/dd/yy)
           </span>
 
           <span className="text-zinc-400 text-sm flex-1 text-end pr-">

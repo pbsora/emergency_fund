@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 import { API } from "@/utils/api";
 import Sidebar from "@/components/dashboard/Sidebar/SidebarDesktop";
-import Navbar from "@/components/NavbarMobile";
+import Navbar from "@/components/dashboard/NavbarMobile";
 import { Parse } from "@/lib/helpers";
 
 const DashboardLayout = async ({
@@ -10,17 +10,6 @@ const DashboardLayout = async ({
 }: {
   children: ReactNode;
 }) => {
-  // let data = await isAuthenticated();
-
-  // if (!data) {
-  //   const newToken = await refreshToken();
-  //   if (newToken) {
-  //     data = await isAuthenticated();
-  //   } else {
-  //     redirect("/login");
-  //   }
-  // }
-
   const res = await API.get("auth/info").then((res) =>
     Parse(res)
   );

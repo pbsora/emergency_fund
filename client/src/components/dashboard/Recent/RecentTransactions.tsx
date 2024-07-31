@@ -19,7 +19,7 @@ const RecentTransactions = async ({
   recentTransactions?: Transaction[];
 }) => {
   return (
-    <div className="lg:max-h-[40%] lg:mt-0">
+    <div className="h-fit lg:max-h-[40%] lg:mt-0 container">
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-xl">
           Recent Activity
@@ -64,23 +64,11 @@ export default RecentTransactions;
 
 export const RecentTransactionsSkeleton = () => {
   return (
-    <div className="lg:max-h-[40%]">
+    <div className="h-fit lg:max-h-[40%] lg:mt-0 container">
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-xl">
           Recent Activity
         </h2>
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Last month" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="light">Last 24h</SelectItem>
-            <SelectItem value="dark">Last week</SelectItem>
-            <SelectItem value="system">
-              Last month
-            </SelectItem>
-          </SelectContent>
-        </Select>
       </div>
       <div className="flex justify-between items-center mt-4">
         <span className="text-zinc-400 text-sm">User</span>

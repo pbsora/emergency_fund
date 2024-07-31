@@ -11,7 +11,7 @@ import { Capitalize } from "@/lib/helpers";
 import { DateTime } from "ts-luxon";
 import { formatCurrency } from "@/utils/formatters";
 import TransactionDetailsDialog from "./TransactionDetailsDialog";
-import { animate, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 type Props = {
   transaction: Transaction;
@@ -42,7 +42,7 @@ const SingleTransaction = ({
 }: Props) => {
   return (
     <motion.div
-      className={`py-2 flex items-center w-full `}
+      className={`py-4 lg:py-2 flex items-center w-full `}
       variants={fadeInAnimationVariants}
       initial="initial"
       animate="animate"
@@ -67,7 +67,7 @@ const SingleTransaction = ({
           typeof transaction.date === "string"
             ? new Date(transaction.date)
             : transaction.date
-        ).toFormat("MM/dd/yyyy")}
+        ).toFormat("MM/dd/yy")}
       </div>
       <div className="w-1/4 text-end">
         {formatCurrency(transaction.amount)}

@@ -1,8 +1,13 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { useTheme } from "next-themes";
+import { MoonIcon, SunIcon } from "lucide-react";
+import ThemeButtonSidebar from "./ThemeButtonSidebar";
+import { HiLogout } from "react-icons/hi";
 
 const SidebarMobile = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,70 +37,53 @@ const SidebarMobile = () => {
       <div
         className={`${
           isOpen ? "translate-x-0" : "-translate-x-[101vw]"
-        } bg-slate-100 flex flex-col items-center justify-center w-3/4 h-screen z-50 absolute top-0 left-0 duration-200 ease-in-out`}
+        } bg-zinc-900 flex flex-col items-center justify-between w-3/4 h-screen z-50 absolute top-0 left-0 duration-200 ease-in-out`}
       >
-        <button
-          className=" z-50 absolute top-5 left-5"
-          onClick={closeSidebar}
-        >
-          <RxHamburgerMenu />
-        </button>
+        <div className="flex justify-between items-center py-10 w-full px-3">
+          <Button
+            className="text-3xl"
+            onClick={closeSidebar}
+            variant={"ghost"}
+          >
+            <RxHamburgerMenu />
+          </Button>
+          <ThemeButtonSidebar />
+        </div>
         <ul className=" items-center justify-center font-montserrat flex flex-col gap-6">
           <li>
-            <a
-              href="#hero"
+            <Link
+              href="/dashboard"
               className="text-3xl"
               onClick={() => setIsOpen(false)}
             >
-              Page top
-            </a>
-          </li>
-          <li>
-            <a
-              href="#about"
-              className="text-3xl"
-              onClick={() => setIsOpen(false)}
-            >
-              About
-            </a>
-          </li>
-          <li>
-            <a
-              href="#skills"
-              className="text-3xl"
-              onClick={() => setIsOpen(false)}
-            >
-              Skills
-            </a>
-          </li>
-          <li>
-            <a
-              href="#portfolio"
-              className="text-3xl"
-              onClick={() => setIsOpen(false)}
-            >
-              Portfolio
-            </a>
-          </li>
-          <li>
-            <a
-              href="#contact"
-              className="text-3xl"
-              onClick={() => setIsOpen(false)}
-            >
-              Contact me
-            </a>
+              Dashboard
+            </Link>
           </li>
           <li>
             <Link
-              href={"/br"}
-              className="text-3xl text-center"
+              href="/transactions"
+              className="text-3xl"
               onClick={() => setIsOpen(false)}
             >
-              Portuguese
+              Savings
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/config"
+              className="text-3xl"
+              onClick={() => setIsOpen(false)}
+            >
+              Settings
             </Link>
           </li>
         </ul>
+        <Button
+          className="mb-16 text-xl bg-transparent py-6 px-4 gap-3 flex"
+          variant={"outline"}
+        >
+          <HiLogout className="text-xl rotate-180" /> Logout
+        </Button>
       </div>
     </>
   );

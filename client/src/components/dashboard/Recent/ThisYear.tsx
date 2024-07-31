@@ -1,7 +1,9 @@
 "use client";
+
 import { Transaction } from "@/lib/Types & Interfaces";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useMemo } from "react";
+import { Oval } from "react-loader-spinner";
 import { DateTime } from "ts-luxon";
 
 type ThisYearProps = {
@@ -46,9 +48,11 @@ const ThisYear = ({ transactions }: ThisYearProps) => {
     [data]
   );
 
+  console.log(series, data + `ThisYear.tsx`);
+
   return (
     <div className="h-[50%] w-full">
-      <h2 className="text-2xl lg:ml-10 font-semibold  mt-10 lg:mt-2 lg:hidden">
+      <h2 className="text-2xl lg:ml-10 font-bold text-zinc-800 dark:text-zinc-200 mt-10 lg:mt-2 lg:hidden pl-6">
         Last 12 months
       </h2>
       <BarChart
@@ -65,3 +69,21 @@ const ThisYear = ({ transactions }: ThisYearProps) => {
   );
 };
 export default ThisYear;
+
+export const ThisYearSkeleton = () => {
+  return (
+    <div className="h-[50%] w-full">
+      <h2 className="text-2xl lg:ml-10 font-bold text-zinc-800 mt-10 lg:mt-2 lg:hidden pl-6">
+        Last 12 months
+      </h2>
+      <div className="flex items-center justify-center h-full">
+        <Oval
+          color="#FFC107"
+          height={50}
+          width={50}
+          secondaryColor="#94a3b8"
+        />
+      </div>
+    </div>
+  );
+};

@@ -30,7 +30,7 @@ const RecentSingleTransaction = ({
   }
 
   return (
-    <div className="h-1/3 flex items-center w-full">
+    <div className="h-24 lg:h-1/3 2xl:h-20 flex items-center w-full">
       <div className="flex items-center gap-5 w-1/3">
         <Avatar className="size-8">
           <AvatarImage
@@ -60,7 +60,7 @@ export default RecentSingleTransaction;
 
 export const RecentSingleTransactionSkeleton = () => {
   return (
-    <div className="h-1/3 flex items-center w-full">
+    <div className="h-24 lg:h-1/3 2xl:h-20 flex items-center w-full">
       <div className="flex items-center gap-5 w-1/3">
         <Avatar className="size-8">
           <AvatarFallback>U</AvatarFallback>
