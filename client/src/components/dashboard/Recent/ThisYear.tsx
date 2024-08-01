@@ -48,8 +48,6 @@ const ThisYear = ({ transactions }: ThisYearProps) => {
     [data]
   );
 
-  console.log(series, data + `ThisYear.tsx`);
-
   return (
     <div className="h-[50%] w-full">
       <h2 className="text-2xl lg:ml-10 font-bold text-zinc-800 dark:text-zinc-200 mt-10 lg:mt-2 lg:hidden pl-6">

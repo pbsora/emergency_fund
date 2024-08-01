@@ -1,26 +1,4 @@
-import axios from "axios";
 import { cookies } from "next/headers";
-
-// const API = axios.create({
-//   baseURL: "http://localhost:5065/api",
-//   withCredentials: true,
-//   headers: {
-//     Cookie: `token=${cookies().get("token")?.value}`,
-//   },
-// });
-
-// export const internalFetch = (
-//   url: string,
-//   options: RequestInit = {}
-// ) => {
-//   return fetch("http://localhost:5065/api/" + url, {
-//     ...options,
-//     credentials: "include",
-//     headers: {
-//       Cookie: `token=${cookies().get("token")?.value}`,
-//     },
-//   });
-// };
 
 class FetchWrapper {
   baseURL: string;

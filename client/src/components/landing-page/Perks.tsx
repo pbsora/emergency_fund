@@ -3,8 +3,6 @@ import { IoEye } from "react-icons/io5";
 import { FaGears } from "react-icons/fa6";
 
 const Perks = () => {
-  console.log("teste");
-
   return (
     <section className="px-3 lg:px-36 py-10 bg-slate-50 flex flex-col lg:flex-row gap-8">
       <div className="flex flex-col gap-7 bg-zinc-100 container py-7 lg:py-12 rounded-lg">

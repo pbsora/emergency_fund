@@ -99,13 +99,6 @@ export default async function middleware(req: NextRequest) {
       );
     }
 
-    // if (!data) {
-    //   const newToken = await refreshToken(req);
-    //   if (newToken) {
-    //     data = await isAuthenticated(req);
-    //   }
-    // }
-
     if (
       req.url.includes("login") ||
       req.url.includes("register")
@@ -123,7 +116,11 @@ export default async function middleware(req: NextRequest) {
       }
     }
   } catch (error) {
-    return NextResponse.redirect(new URL("/", req.url));
+    if (error.message === "fetch failed") {
+      return NextResponse.redirect(
+        new URL("/not-found", req.url)
+      );
+    }
   }
 }
 

@@ -37,7 +37,7 @@ const MonthsChange = ({ config }: Props) => {
   return (
     <form
       action={action}
-      className="flex flex-col gap-5 md:h-auto w-full sm:w-3/4 m-auto md:m-0 lg:w-2/4 xl:w-[35%] mb-10"
+      className="flex flex-col gap-5 md:h-auto w-full sm:w-3/4 m-auto md:m-0 lg:w-2/4 xl:w-[35%] pb-10 lg:pb-20"
     >
       <div className="flex flex-col gap-3">
         <h2 className="font-semibold text-lg">
