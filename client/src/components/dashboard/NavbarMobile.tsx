@@ -15,13 +15,13 @@ const Navbar = () => {
   );
 
   return (
-    <div className="w-full py-4 z-10 px-4 md:p-4 lg:p-8 flex flex-col-reverse md:flex-row items-center justify-between gap-4 lg:hidden shadow-md bg-zinc-900 text-zinc-200">
+    <div className="w-full py-3 z-10 px-4 md:p-4 lg:p-8 flex flex-col-reverse md:flex-row items-center justify-between gap-4 lg:hidden shadow-md bg-zinc-900 text-zinc-200">
       <div className="flex items-center justify-between lg:justify-end w-full lg:w-auto gap-6">
-        <div className="lg:hidden text-2xl">
+        <div className="lg:hidden text-2xl flex items-center">
           <SidebarMobile />
         </div>
         <div className="flex items-center gap-4">
-          <Avatar className="size-12">
+          <Avatar className="size-10">
             <AvatarImage
               src={profilePicture}
               alt={name}

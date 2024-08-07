@@ -11,7 +11,7 @@ const Hero = () => {
             Life happens
           </h2>
           <div className="w-fit relative m-auto lg:m-0">
-            <span className="text-[3.5rem] lg:text-7xl 2xl:text-8xl font-serif w-fit z-[200] relative text-zinc-100 text-center text-nowrap">
+            <span className="text-[3rem] lg:text-7xl 2xl:text-8xl font-serif w-fit z-[200] relative text-zinc-100 text-center text-nowrap">
               Be prepared!
             </span>
             <div className="absolute w-full scale-y-125 scale-x-105 skew-x-[7deg] rotate-[180deg] h-full z-[100] bg-yellow-500/90 top-2 rounded-sm" />

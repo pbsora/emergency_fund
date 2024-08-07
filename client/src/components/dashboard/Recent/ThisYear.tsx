@@ -2,6 +2,7 @@
 
 import { Transaction } from "@/lib/Types & Interfaces";
 import { BarChart } from "@mui/x-charts/BarChart";
+import { useTheme } from "next-themes";
 import { useMemo } from "react";
 import { Oval } from "react-loader-spinner";
 import { DateTime } from "ts-luxon";
@@ -11,6 +12,8 @@ type ThisYearProps = {
 };
 
 const ThisYear = ({ transactions }: ThisYearProps) => {
+  const { theme } = useTheme();
+
   const months = useMemo(
     () =>
       Array.from({ length: 12 }, (_, i) =>
@@ -50,7 +53,7 @@ const ThisYear = ({ transactions }: ThisYearProps) => {
 
   return (
     <div className="h-[50%] w-full">
-      <h2 className="text-2xl lg:ml-10 font-bold text-zinc-800 dark:text-zinc-200 mt-10 lg:mt-2 lg:hidden pl-6">
+      <h2 className="text-2xl lg:ml-10 font-bold text-zinc-800 dark:text-zinc-200 pt-2 lg:mt-2 lg:hidden pl-6">
         Last 12 months
       </h2>
       <BarChart
@@ -60,8 +63,29 @@ const ThisYear = ({ transactions }: ThisYearProps) => {
             data: months,
           },
         ]}
+        sx={{
+          "& .MuiChartsAxis-left .MuiChartsAxis-tickLabel":
+            {
+              strokeWidth: "0.4",
+              fill: theme === "light" ? "#000" : "#fff",
+            },
+          "& .MuiChartsAxis-bottom .MuiChartsAxis-tickLabel":
+            {
+              fill: theme === "light" ? "#000" : "#fff",
+            },
+          "& .MuiChartsAxis-bottom .MuiChartsAxis-line": {
+            stroke: theme === "light" ? "#000" : "#fff",
+          },
+
+          "& .MuiChartsAxis-left .MuiChartsAxis-line": {
+            stroke: theme === "light" ? "#000" : "#fff",
+          },
+        }}
         series={[{ data: series }]}
         colors={["#FFC107"]}
+        slotProps={{
+          loadingOverlay: { message: "Loading..." },
+        }}
       />
     </div>
   );

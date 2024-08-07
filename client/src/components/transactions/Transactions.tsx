@@ -21,7 +21,6 @@ import {
 const Transactions = () => {
   const [page, setPage] = useState(1);
   const [datefilter, setDateFilter] = useState("newest");
-  const [valueFilter, setValueFilter] = useState("");
   const user = useAppSelector((state) => state.user.value);
 
   const { data, refetch } = useQuery({
@@ -48,7 +47,7 @@ const Transactions = () => {
           Savings
         </h1>
         <div className="flex items-center gap-3">
-          <div className="flex items-center">
+          <div className="flex items-center gap-1">
             <Button
               variant={"outline"}
               className="text-3xl px-2 rotate-180 dark:bg-zinc-200 text-zinc-900 hover:text-zinc-900 dark:hover:bg-zinc-300 duration-200"
@@ -70,11 +69,11 @@ const Transactions = () => {
               <IoMdArrowDropright />
             </Button>
           </div>
-          <NewTransactionDialog
-            refetch={refetch as () => void}
-          />
         </div>
       </div>
+      <NewTransactionDialog
+        refetch={refetch as () => void}
+      />
       <hr className="border-b border-zinc-200 mt-4" />
       <div className="w-full mt-3 flex gap-3  justify-end">
         <Select onValueChange={(e) => setDateFilter(e)}>

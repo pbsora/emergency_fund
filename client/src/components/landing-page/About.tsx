@@ -6,12 +6,12 @@ const About = () => {
           What is an emergency fund?
         </h2>
         <div className="lg:w-7/12 flex flex-col gap-5">
-          <p className="lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold text-lg">
+          <p className="text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
             An emergency fund is a stash of money set aside
             to cover the financial surprises life throws
             your way.
           </p>
-          <p className="lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold text-lg">
+          <p className="lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
             These unexpected events can be stressful and
             costly. For example, you may need to replace
             your car's transmission, or you may need to
@@ -28,7 +28,7 @@ const About = () => {
           Why do you need one?
         </h2>
         <div className="lg:w-7/12 flex flex-col gap-5">
-          <p className="text-lg lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
+          <p className="lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
             According to a {""}
             <a
               href="https://www.foxbusiness.com/economy/most-americans-cannot-afford-1000-emergency-expense"
@@ -42,12 +42,12 @@ const About = () => {
             (35%) said they would have to borrow the money
             somehow to pay it.
           </p>
-          <p className="text-lg lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
+          <p className="lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
             An emergency fund allows you to not be shaken up
             by life, remain calm and face the problem
             without losing your marbles.
           </p>
-          <p className="text-lg lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
+          <p className="lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
             You probably know someone that went through
             something like this: they lost their job, had to
             pay for a medical emergency, or had to fix their
@@ -57,7 +57,7 @@ const About = () => {
             a loan. That's how the spiral of debt and stress
             starts.
           </p>
-          <p className="text-lg lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
+          <p className="lg:text-base leading-loose lg:leading-8 text-zinc-500 font-semibold">
             But with an emergency fund, you can avoid that.
             Life will continue as usual.
           </p>

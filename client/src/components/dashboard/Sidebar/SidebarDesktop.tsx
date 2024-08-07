@@ -31,16 +31,16 @@ const Sidebar = ({ user }: { user: User }) => {
       </div>
       <div className="flex flex-col mt-10 flex-1">
         <SidebarLink href={"/dashboard"}>
-          <MdDashboard className="text-lg lg:text-xl" />
+          <MdDashboard className="text-lg lg:text-xl 2xl:text-2xl" />
           <span>Dashboard</span>
         </SidebarLink>
         <SidebarLink href={"/transactions"}>
-          <TbTransactionDollar className="text-lg lg:text-xl" />
+          <TbTransactionDollar className="text-lg lg:text-xl 2xl:text-2xl" />
           <span>Savings</span>
         </SidebarLink>
 
         <SidebarLink href={"/config"}>
-          <FaGear size={22} />
+          <FaGear className="text-lg lg:text-xl 2xl:text-2xl" />
           <span>Settings</span>
         </SidebarLink>
         <div className="mt-auto mb-10">
@@ -68,9 +68,9 @@ const LogoutButton = () => {
         {pending ? (
           <Oval width={25} color="#FFC107" />
         ) : (
-          <HiLogout className="text-xl rotate-180" />
+          <HiLogout className="text-xl 2xl:text-2xl rotate-180" />
         )}
-        <p className="text-lg">Logout</p>
+        <p className="text-lg 2xl:text-xl">Logout</p>
       </button>
     </form>
   );

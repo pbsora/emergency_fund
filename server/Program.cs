@@ -46,7 +46,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Petshop", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Emergency Fund", Version = "v1" });
 
     c.AddSecurityDefinition(
         "Bearer",
@@ -203,7 +203,5 @@ app.UseAuthorization();
 app.UseStaticFiles();
 
 app.MapControllers();
-
-app.MapIdentityApi<ApplicationUser>();
 
 app.Run();

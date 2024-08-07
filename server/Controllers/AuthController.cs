@@ -158,7 +158,7 @@ namespace server.Controllers
 
                 SaveToken("token", "");
 
-                return Ok(new { message = "Logout successful" });
+                return Ok(new { message = "Logout successfull" });
             }
             catch (Exception ex)
             {

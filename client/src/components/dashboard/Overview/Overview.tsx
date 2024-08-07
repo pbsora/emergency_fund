@@ -43,17 +43,17 @@ const Overview = async () => {
     ) || 0;
 
   return (
-    <div className="bg-gradient-to-b from-zinc-50 to-white dark:from-zinc-950/90 from-95% md:dark:bg-[#1F1F1F] md:w-[35%] h-screen container flex flex-col">
+    <div className="bg-gradient-to-b from-zinc-50 to-white dark:from-zinc-950/90 from-95% md:from-100% md:w-[35%] h-screen container flex flex-col">
       <h1 className="font-bold text-zinc-800 dark:text-zinc-200 text-2xl my-10">
         Overview
       </h1>
-      <div className="flex flex-col gap-8 flex-1">
+      <div className="flex flex-col gap-5 lg:gap-8 flex-1">
         <div className="flex flex-col pb-4 border-b dark:border-zinc-400">
           <h2 className="text-base lg:text-sm font-light text-zinc-500 dark:text-zinc-400 mb-1">
             Total Savings
           </h2>
           <div className="flex items-end justify-between">
-            <span className="text-3xl lg:text-2xl font-semibold">
+            <span className="text-3xl lg:text-2xl 2xl:text-3xl font-semibold">
               {formatCurrency(stats.total)}
             </span>
           </div>
@@ -63,7 +63,7 @@ const Overview = async () => {
             Times saved
           </h2>
           <div className="flex items-end justify-between">
-            <span className="text-3xl lg:text-2xl font-semibold">
+            <span className="text-3xl lg:text-2xl 2xl:text-3xl font-semibold">
               {stats.count}
             </span>
           </div>
@@ -73,7 +73,7 @@ const Overview = async () => {
             Last
           </h2>
           <div className="flex items-end justify-between">
-            <span className="text-3xl lg:text-2xl font-semibold">
+            <span className="text-3xl lg:text-2xl 2xl:text-3xl font-semibold">
               {stats.count > 0
                 ? DateTime.fromJSDate(
                     typeof stats.last.date === "string"

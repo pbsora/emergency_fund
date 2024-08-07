@@ -29,7 +29,7 @@ const transactionSchema = z.object({
     .min(5, "Description is too short")
     .max(100, "Description is too long"),
   date: z
-    .string()
+    .string({ required_error: "Date is required" })
     .refine((val) => new Date(val) < new Date(Date.now()), {
       message: "Date can't be in the future",
     }),

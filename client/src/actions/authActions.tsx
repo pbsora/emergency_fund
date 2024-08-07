@@ -140,6 +140,8 @@ export const loginAction = async (
       return AggregateErrorHelper(error);
     }
 
+    console.error(error.message);
+
     return (
       ((error as AxiosError)?.response?.data as {
         message: string;
@@ -224,6 +226,9 @@ export const registerAction = async (
     if (Object.values(error)[0] instanceof AggregateError) {
       return AggregateErrorHelper(error);
     }
+
+    console.error(error.message);
+
     return (
       ((error as AxiosError)?.response?.data as {
         message: string;
@@ -236,6 +241,18 @@ export const registerAction = async (
 
 export const logoutAction = async () => {
   const res = await API.post("auth/logout");
+
+  if (!res.ok) {
+    const error = await res.json();
+    if (Object.values(error)) {
+      cookies().delete("token");
+      cookies().delete("refresh-token");
+      redirect("/");
+    }
+    console.log(
+      Object.values(error) + ` - authActions.tsx`
+    );
+  }
 
   if (!res.ok) {
     return { message: "Something went wrong" };

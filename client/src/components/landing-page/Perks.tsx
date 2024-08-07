@@ -12,7 +12,7 @@ const Perks = () => {
         <h2 className="text-2xl font-bold text-zinc-800">
           Completely free
         </h2>
-        <div className="font-semibold text-zinc-500 text-lg lg:text-base leading-8">
+        <div className="font-semibold text-zinc-500 text-base leading-8">
           We don't charge you anything to use our service.
           We believe that everyone should have access to an
           emergency fund.
@@ -25,7 +25,7 @@ const Perks = () => {
         <h2 className="text-2xl font-bold text-zinc-800">
           Visibility
         </h2>
-        <div className="font-semibold text-zinc-500 text-lg lg:text-base leading-8">
+        <div className="font-semibold text-zinc-500 text-base leading-8">
           Get real time visibility into your emergency fund.
           See how much you saved every month and how much
           you need to save to reach your goal.
@@ -38,7 +38,7 @@ const Perks = () => {
         <h2 className="text-2xl font-bold text-zinc-800">
           Saving made easy
         </h2>
-        <div className="font-semibold text-zinc-500 text-lg lg:text-base leading-8">
+        <div className="font-semibold text-zinc-500 text-base leading-8">
           Our platform makes it easy to save money every
           month. The only thing you need to do is set a goal
           and we'll take care of the rest.
