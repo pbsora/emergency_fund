@@ -42,7 +42,7 @@ const SingleTransaction = ({
 }: Props) => {
   return (
     <motion.div
-      className={`py-4 lg:py-2 flex items-center w-full `}
+      className={`py-4 lg:py-2 2xl:py-5 flex items-center w-full `}
       variants={fadeInAnimationVariants}
       initial="initial"
       animate="animate"

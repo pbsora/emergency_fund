@@ -64,7 +64,7 @@ export default TopBar;
 const TopBarSkeleton = () => {
   return (
     <div className="w-full h-[10%] py-2 px-3 md:p-8 flex-col-reverse md:flex-row items-center justify-end gap-4 hidden lg:flex">
-      <div className="w-full lg:w-72  flex items-center justify-start py-1">
+      <div className="w-full lg:w-72  flex items-center justify-end py-1">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon">

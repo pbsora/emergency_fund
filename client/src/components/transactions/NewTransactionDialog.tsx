@@ -50,9 +50,11 @@ const NewTransactionDialog = ({ refetch }: Props) => {
 
   if (!Mounted) {
     return (
-      <div className=" md:w-2/4 justify-center flex border rounded-md hover:bg-zinc-300 py-2 px-2  dark:hover:bg-zinc-400 duration-200 ml-auto">
-        <Plus className="text-green-500 dark:text-green-400 mr-2" />
-        <span>Add transaction</span>
+      <div className="w-full md:w-2/4 self-end mt-2">
+        <div className="md:w-2/4 lg:w-4/12 justify-center flex border rounded-md hover:bg-zinc-300 py-2 px-2  dark:hover:bg-zinc-400 duration-200 ml-auto">
+          <Plus className="text-green-500 dark:text-green-400 mr-2" />
+          <span>Add transaction</span>
+        </div>
       </div>
     );
   }
@@ -60,7 +62,7 @@ const NewTransactionDialog = ({ refetch }: Props) => {
   return (
     <Dialog>
       <DialogTrigger className="w-full md:w-2/4 self-end mt-2">
-        <div className=" md:w-2/4 justify-center flex border rounded-md hover:bg-zinc-300 py-2 px-2  dark:hover:bg-zinc-400 duration-200 ml-auto">
+        <div className="md:w-2/4 lg:w-4/12 justify-center flex border rounded-md hover:bg-zinc-300 py-2 px-2  dark:hover:bg-zinc-400 duration-200 ml-auto">
           <Plus className="text-green-500 mr-2 dark:text-green-400" />
           <span>Add transaction</span>
         </div>
